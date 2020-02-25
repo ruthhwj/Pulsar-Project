@@ -19,8 +19,9 @@ pulsar_arg=["pulsar_getter.sh", "", "", "","","","","","","","","","","","","","
 # def
 
 def generate_pulsars(i, arg1, *argv): #arg1 is the starting parameter, argv is the total list of parameters
+	
     for arg in argv:
-
+        int_arg = int(pulsar_arg[i]
     subprocess.check_call(pulsar_arg)
 #call bash script looping over pulsars
 def read_pulsars():
@@ -66,5 +67,13 @@ print(df_pixelarray_exp)
 
 #calculate chi squared
 
-#array = np.array(((df_exp.col4-df_model.col4)^2)/df_model.col4 )
-#chi = np.sum(array)
+testarray=np.array(50*2246)
+print(test)
+
+#calculate chi squared 
+
+x1 = intensities_exp - testarray
+x2 = np.divide(x1*x1, intensities_exp)
+chi = np.sum(x2)
+
+
