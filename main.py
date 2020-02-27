@@ -14,7 +14,7 @@ import glob, os
 
 #pulsar arguments: fakepulsar -cone "1-9" -ellipse "10-12" -cone'13-21' -ellipse '22-24' -a '25' -b '26' -gg'27'
 
-pulsar_arg=["pulsar-getter", "1", "10.5", "1","15","750","12","-1","300","0","0.85","45","1","0.5","7.7","1","15","750","12","-1","300","0","0.8","45","1","20","-2.4", "w6test3model.gg"]
+pulsar_arg=["pulsar-getter.sh", "1", "10.5", "1","15","750","12","-1","300","0","0.85","45","1","0.5","7.7","1","15","750","12","-1","300","0","0.8","45","1","20","-2.4", "w6test3model.gg"]
 test = subprocess.Popen(pulsar_arg)
 output = test.communicate()[0]
 print(output)
