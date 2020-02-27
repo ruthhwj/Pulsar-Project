@@ -12,14 +12,14 @@ import subprocess
 from astropy.io import ascii
 import glob, os
 
-#pulsar arguments:
+#pulsar arguments: fakepulsar -cone "1-9" -ellipse "10-12" -cone'13-21' -ellipse '22-24' -a '25' -b '26' -gg'27'
 
-pulsar_arg=["pulsar_getter.sh", "", "", "","","","","","","","","","","","","",""]
-#[script name, alpha, beta, I1, rho1, w1, n1, p41, e1, or1, I2, rho2, w2, n2, p42, e2, or2]
+pulsar_arg=["pulsar_getter.sh", "1", "10.5", "1","15","750","12","-1","300","0","0.85","45","1","0.5","7.7","1","15","750","12","-1","300","0","0.8","45","1","20","-2.4", "w6test3model.gg"]
+subprocess.check_call(pulsar_arg)
+#[script name, I1, rho1, w1, n1, p4_1, phi0_1, fP4_1, t4_1, phi4_1 e1, or1, s2, I2, rho2, w2, n2, p4_2, phi0_2, fP4_2, t4_2, phi4_2 e2, or2, s2, a, b, filename (include .gg)]
 # def
 
 def generate_pulsars(i, arg1, *argv): #arg1 is the starting parameter, argv is the total list of parameters
-	
     for arg in argv:
         int_arg = int(pulsar_arg[i]
     subprocess.check_call(pulsar_arg)
@@ -32,7 +32,7 @@ def read_pulsars():
 #store as an array
 
 #def bi_test():
-
+"""
 def plot_pulsars():
 #loop over array formed by read_pulsars()
 #def constrain_parameter(): #will likely extend this to individual functions for each paramter or a class
@@ -76,4 +76,4 @@ x1 = intensities_exp - testarray
 x2 = np.divide(x1*x1, intensities_exp)
 chi = np.sum(x2)
 
-
+"""
