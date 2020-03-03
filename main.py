@@ -11,9 +11,13 @@ import matplotlib.pyplot as plt
 import subprocess
 from astropy.io import ascii
 import glob, os
+import sklearn 
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import minmax_scale
+
 
 #pulsar arguments:
-
+"""
 pulsar_arg=["pulsar_getter.sh", "", "", "","","","","","","","","","","","","",""]
 #[script name, alpha, beta, I1, rho1, w1, n1, p41, e1, or1, I2, rho2, w2, n2, p42, e2, or2]
 # def
@@ -36,44 +40,61 @@ def read_pulsars():
 def plot_pulsars():
 #loop over array formed by read_pulsars()
 #def constrain_parameter(): #will likely extend this to individual functions for each paramter or a class
-
+"""
 
 #Read in experimental data
 data_exp = ascii.read("weak.all37.p3fold.ASCII", data_start=1)
-df_exp = data_exp.to_pandas()
 
-#calculate baseline and add it so that all intensity values are >0
+df_exp = data_exp.to_pandas()
 
 intensities_exp = np.array(df_exp.col4)
 
 df_pixelarray_exp = pd.DataFrame(np.array(intensities_exp).reshape(50,2246)) 
 
-print(df_pixelarray_exp)
+#plt.imshow(df_pixelarray_exp, 'twilight', origin='lower', interpolation='none', aspect='auto')
 
-plt.imshow(df_pixelarray_exp, 'twilight', origin='lower', interpolation='none', aspect='auto')
 
-print(df_pixelarray_exp)
+
+
 #read in simulated data
-#data_model = ascii.read("", data_start=1)
+data_model = ascii.read("W5testmodel.p3fold.ASCII", data_start=1)
 
-#df_model = data_model.to_pandas()
+df_model = data_model.to_pandas()
 
-#intensities_model = np.array(df_model.col4)
+intensities_model = np.array(df_model.col4)
 
-#df_pixelarray_model = pd.DataFrame(np.array(intensities_model).reshape(50,2246)) 
+df_pixelarray_model = pd.DataFrame(np.array(intensities_model).reshape(50,2246)) 
 
-#plt.imshow(df_pixelarray_model, 'gray', origin='lower', interpolation='none', aspect='auto')
+#plt.imshow(df_pixelarray_model, 'twilight', origin='lower', interpolation='none', aspect='auto')
 
 
-#calculate chi squared
 
-testarray=np.array(50*2246)
-print(test)
 
-#calculate chi squared 
 
-x1 = intensities_exp - testarray
-x2 = np.divide(x1*x1, intensities_exp)
-chi = np.sum(x2)
+#replace experimental intensities with the smallest non zero value
+ref = minmax_scale(intensities_exp)
+img = minmax_scale(intensities_model)
 
+DoF = (len(ref) -1)
+chi=0
+chi_0=0
+
+ones = np.ones(len(ref))
+
+for i in range(len(ref)):
+    x1 = (ones[i]-ref[i])
+    if img[i] != 0:
+        chi_0 += x1*x1/img[i]
+
+print(chi_0/DoF) 
+
+
+for i in range(len(ref)):
+    x1 = (img[i]-ref[i])
+    if img[i] != 0:
+        chi_i = x1*x1/img[i]
+        #print(chi_i)
+        chi += chi_i
+
+print(chi/DoF)
 
