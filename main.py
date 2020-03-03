@@ -23,9 +23,9 @@ def generate_pulsars(inc):
 		pulsar_arg[28]="SimPulse{}{}.gg".format(j, inc)
 		pulsars["Pulsar{}{}".format(j, arg_names[i-1])] = subprocess.Popen(pulsar_arg)
 
-def main():
-	generate_pulsars(0.1)
-	print(pulsars)
+
+generate_pulsars(0.1)
+print(pulsars)
 
 		
 			     
