@@ -18,12 +18,10 @@ ref_pulsar = subprocess.Popen(pulsar_arg)
 arg_names = ["n1", "p4_1", "phi0_1", "fP4_1", "t4_1", "phi4_1", "e1", "or1", "s2", "I2", "rho2", "w2", "n2", "p4_2", "phi0_2", "fP4_2", "t4_2", "phi4_2", "e2", "or2", "s2", "a", "b"] 
 pulsars = {} 
 def generate_pulsars(inc):
-	print("generating pulsars")
-	for i in [x for x in range(27) if x != 0]:
-		for j in range(10):
-			pulsar_arg[i]+=inc
-			pulsar_arg[28]="SimPulse{}{}.gg".format(j, inc)
-			pulsars["Pulsar{}{}".format(j, arg_names[i-1])] = subprocess.Popen(pulsar_arg)
+	for j in range(13) and i in [x for x in range(27) if x != 0]:
+		pulsar_arg[i]+=inc
+		pulsar_arg[28]="SimPulse{}{}.gg".format(j, inc)
+		pulsars["Pulsar{}{}".format(j, arg_names[i-1])] = subprocess.Popen(pulsar_arg)
 
 def main():
 	generate_pulsars(0.1)
