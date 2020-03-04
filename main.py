@@ -21,8 +21,8 @@ pulsars = {}
 def generate_pulsars(inc):
 	for j in range(13):
 		for i in [x for x in range(27) if x != 0]:
-			pulsar_arg[i]=string((float(pulsar_arg[i])+inc))
-			pulsar_arg[28]="SimPulse{}{}.gg".format(string(j), string(inc))
+			pulsar_arg[i]=str((float(pulsar_arg[i])+inc))
+			pulsar_arg[28]="SimPulse{}{}.gg".format(str(j), str(inc))
 			pulsars["Pulsar{}{}".format(j, arg_names[i-1])] = subprocess.check_output(pulsar_arg, shell=True)
 
 
