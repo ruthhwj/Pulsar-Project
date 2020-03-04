@@ -19,11 +19,11 @@ arg_names = ["n1", "p4_1", "phi0_1", "fP4_1", "t4_1", "phi4_1", "e1", "or1", "s2
 pulsars = {}
 def generate_pulsars(inc):
 	pulsars["RefPulsar"] = subprocess.check_output(pulsar_arg, shell=True)
-	for j in range(13):
-		for i in [x for x in range(27) if x != 0]:
-			pulsar_arg[i]=str((float(pulsar_arg[i])+inc))
-			pulsar_arg[27]="SimPulse{}{}.gg".format(str(j), str(inc))
-			pulsars["Pulsar{}{}".format(str(j), str(arg_names[i-1]))] = subprocess.check_output(pulsar_arg, shell=True)
+	# for j in range(13):
+	# 	for i in [x for x in range(27) if x != 0]:
+	# 		pulsar_arg[i]=str((float(pulsar_arg[i])+inc))
+	# 		pulsar_arg[27]="SimPulse{}{}.gg".format(str(j), str(inc))
+	# 		pulsars["Pulsar{}{}".format(str(j), str(arg_names[i-1]))] = subprocess.check_output(pulsar_arg, shell=True)
 
 
 print("attempting to generate model pulsars")
