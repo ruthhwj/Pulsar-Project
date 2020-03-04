@@ -24,13 +24,17 @@ def generate_pulsars(inc):
 			pulsar_arg[28]="SimPulse{}{}.gg".format(j, inc)
 			pulsars["Pulsar{}{}".format(j, arg_names[i-1])] = subprocess.Popen(pulsar_arg)
 
+
+print("attempting to generate model pulsars")
 generate_pulsars(0.1)
 print("Finished Generating Pulsars")
 for x in pulsars:
 	print(x.values)
 
-		
-			     
+
+
+
+
 #call bash script looping over pulsars
 #def read_pulsars():
 #    global data=[]
