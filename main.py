@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import subprocess
+import plumbum
 from astropy.io import ascii
 import glob, os
 
@@ -21,7 +22,7 @@ def generate_pulsars(inc):
 	for j in range(13):
 		for i in [x for x in range(27) if x != 0]:
 			pulsar_arg[i]+=inc
-			pulsar_arg[28]="SimPulse{}{}.gg".format(j, inc)
+			pulsar_arg[28]="SimPulse{}{}.gg".format(j.tostr(), inc.tostr())
 			pulsars["Pulsar{}{}".format(j, arg_names[i-1])] = subprocess.check_output(pulsar_arg, shell=True)
 
 
