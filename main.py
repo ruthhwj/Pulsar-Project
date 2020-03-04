@@ -9,7 +9,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import subprocess
-import plumbum
 from astropy.io import ascii
 import glob, os
 
