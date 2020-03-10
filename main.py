@@ -16,14 +16,13 @@ import glob, os
 #pulsar arguments list: fakepulsar -cone "1-9" -ellipse "10-12" -cone'13-21' -ellipse '22-24' -a '25' -b '26' -gg'27'
 pulsar_arg=["./pulsar-getter.sh", "0.5", "10.5", "1","15","0.85","45","0.5","7.7","1", "15", "refpulsar.gg"]
 #[script name, I1, rho1, w1, n1, e1, or1, s2, I2, rho2, w2, n2,, e2, or2, s2, a, b, filename (include .gg)]
-
 pulsars = {}
 def generate_pulsars(inc):
-  pulsars{"RefPulsar"} = subprocess.check_output(pulsar_arg)
+  pulsars["RefPulsar"] = subprocess.check_output(pulsar_arg)
   for j in range(5):
     pulsar_arg[1]=str((float(pulsar_arg[1])+inc))
-    pulsar_arg[27]="SimPulseI1{}.gg".format(str(j))
-    pulsars{SimPulseI1{}.format(str(j))} = subprocess.check_output(pulsar_arg)
+    pulsar_arg[12]="SimPulseI1{}.gg".format(str(j))
+    pulsars[SimPulseI1{}.format(str(j))] = subprocess.check_output(pulsar_arg)
 
 print("attempting to generate model pulsars")
 generate_pulsars(0.1)
