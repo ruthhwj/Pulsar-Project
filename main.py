@@ -71,7 +71,7 @@ def fit_measure(intensities_ref, intensities_img):
         x1 = (img[i] - ref[i])
         if img[i] != 0:
             chi += x1 * x1 / img[i]
-    return chi
+    return (chi/DoF)
 
 
 """ 
