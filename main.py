@@ -27,9 +27,8 @@ def generate_pulsars(inc):
 print("attempting to generate model pulsars")
 generate_pulsars(0.1)
 print("Finished Generating Pulsars")
-# for x in pulsars:
-# 	print(x.values)
-
+for x in pulsars:
+  print(x.values)
 
 
 
