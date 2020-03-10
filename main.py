@@ -22,7 +22,7 @@ def generate_pulsars(inc):
   for j in range(5):
     pulsar_arg[1]=str((float(pulsar_arg[1])+inc))
     pulsar_arg[12]="SimPulseI1{}.gg".format(str(j))
-    pulsars[SimPulseI1{}.format(str(j))] = subprocess.check_output(pulsar_arg)
+    pulsars["SimPulseI1{}.format(str(j))"] = subprocess.check_output(pulsar_arg)
 
 print("attempting to generate model pulsars")
 generate_pulsars(0.1)
