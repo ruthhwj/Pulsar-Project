@@ -14,11 +14,11 @@ from astropy.io import ascii
 import glob, os
 
 #pulsar arguments list: fakepulsar -cone "1-9" -ellipse "10-12" -cone'13-21' -ellipse '22-24' -a '25' -b '26' -gg'27'
-pulsar_arg=["./pulsar-getter.sh", "1", "10.5", "1","15","750","12","-1","300","0","0.85","45","1","0.5","7.7","1","15","750","12","-1","300","0","0.8","45","1","20","-2.4", "refpulsar.gg"] #[script name, I1, rho1, w1, n1, p4_1, phi0_1, fP4_1, t4_1, phi4_1 e1, or1, s2, I2, rho2, w2, n2, p4_2, phi0_2, fP4_2, t4_2, phi4_2 e2, or2, s2, a, b, filename (include .gg)]
+pulsar_arg=["./pulsar-getter.sh", "1", "10.5", "1","15","750","12","-1","300","0","0.85","45","1","0.5","7.7","1","15","750","12","-1","300","0","0.8","45","1","20","-2.4", "refpulsar2.gg"] #[script name, I1, rho1, w1, n1, p4_1, phi0_1, fP4_1, t4_1, phi4_1 e1, or1, s2, I2, rho2, w2, n2, p4_2, phi0_2, fP4_2, t4_2, phi4_2 e2, or2, s2, a, b, filename (include .gg)]
 arg_names = ["n1", "p4_1", "phi0_1", "fP4_1", "t4_1", "phi4_1", "e1", "or1", "s2", "I2", "rho2", "w2", "n2", "p4_2", "phi0_2", "fP4_2", "t4_2", "phi4_2", "e2", "or2", "s2", "a", "b"]
 pulsars = {}
 def generate_pulsars(inc):
-	pulsars["RefPulsar"] = subprocess.check_output(pulsar_arg)
+	pulsars["RefPulsar2"] = subprocess.check_output(pulsar_arg)
 	# for j in range(13):
 	# 	for i in [x for x in range(27) if x != 0]:
 	# 		pulsar_arg[i]=str((float(pulsar_arg[i])+inc))
