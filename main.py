@@ -24,6 +24,7 @@ def generate_pulsars(inc):
     pulsar_arg[13]="SimPulseI1{}.gg".format(str(j))
     pulsars["SimPulseI1{}.format(str(j))"] = subprocess.check_output(pulsar_arg)
 
+    
 print("attempting to generate model pulsars")
 generate_pulsars(0.1)
 print("Finished Generating Pulsars")
