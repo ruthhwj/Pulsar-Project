@@ -18,12 +18,10 @@ pulsar_arg=["./pulsar-getter.sh", "0.5", "10.5", "1","15","750","12","-1","300",
 arg_names = ["I1", "rho1", "w1", "n1", "p4_1", "phi0_1", "fP4_1", "t4_1", "phi4_1", "e1", "or1", "s2", "I2", "rho2", "w2", "n2", "p4_2", "phi0_2", "fP4_2", "t4_2", "phi4_2", "e2", "or2", "s2", "a", "b"]
 pulsars = {}
 def generate_pulsars(inc):
-#pulsars["RefPulsar2"] = subprocess.check_output(pulsar_arg)
-	for j in range(5):
-	 	pulsar_arg[1]=str((float(pulsar_arg[1])+inc))
-	 	pulsar_arg[27]="SimPulse{}{}.gg".format(str(j), str(inc))
-#	 	pulsars["Pulsar{}".format(str(j))] = subprocess.check_output(pulsar_arg, shell=True)
-		print pulsar_arg
+  for j in range(5):
+    pulsar_arg[1]=str((float(pulsar_arg[1])+inc))
+    pulsar_arg[27]="SimPulse{}{}.gg".format(str(j),str(inc))
+    print(pulsar_arg)
 
 print("attempting to generate model pulsars")
 generate_pulsars(0.1)
