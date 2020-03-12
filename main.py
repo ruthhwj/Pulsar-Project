@@ -57,9 +57,9 @@ def read_pulsar(string):  # Reads ASCII, returns dataframe  #"weak.all37.p3fold.
 
 
 def get_intensities(df, flag):  # Reads dataframe, returns 50x2246 array for plotting OR as a list
-    intensities = np.array(df.col4)  # extract intensities column
-    df_pixelarray = pd.DataFrame(np.array(intensities).reshape(50, 2246))  # shape into array with dimensions of image
-    if flag == 0:
+    intensities = np.array(df.col4)  # extract intensities column    
+    if flag == 0: 
+	df_pixelarray = pd.DataFrame(np.array(intensities).reshape(50, 2246))# shape into array with dimensions of image
         return df_pixelarray  # want this for plotting
     if flag != 0:
         return intensities  # want this for analysis
