@@ -119,9 +119,9 @@ for i in range(len(param_dict[1])):
                   pulsar_arg[8] = str(param_dict[8][p])
                   pulsar_arg[9] = str(param_dict[9][q])
 
-                  pulsar_arg[13] = "SimPulse{}.gg".format(pulsar_number)
+                  pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
 
-                  subprocess.check_output(pulsar_arg)  # run fake Pulsar
+                  subprocess.check_output(pulsar_arg)
 
                   pulsars_args[int(pulsar_number)] = pulsar_arg # dump arg list into dictionary
 
