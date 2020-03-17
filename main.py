@@ -127,6 +127,8 @@ for i in range(len(param_dict[1])):
 
                   pulsar_arg.pop(14) # weird 14th argument showing up, idk why just get rid
 
+                  print(pulsar_arg)
+
                   subprocess.check_output(pulsar_arg)
 
                   pulsars_args[int(pulsar_number)] = pulsar_arg # dump arg list into dictionary
@@ -138,7 +140,7 @@ for i in range(len(param_dict[1])):
                   pulsars_args[int(pulsar_number)].append(chi) # append chi onto list in dictionary
 
 
-                  print( "Pulsar "+ pulsar_number + " has a chi squared of " + chi)
+                  print( "Pulsar "+ pulsar_number + " has a chi squared of " + str(chi))
 
                   #clean up
 
