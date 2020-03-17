@@ -36,7 +36,7 @@ for x in pulsars:
 
 
 
-#loop over array formed by read_pulsars()
+
 #def constrain_parameter(): #will likely extend this to individual functions for each paramter or a class
 
 def read_pulsar(string):  # Reads ASCII, returns dataframe  #"weak.all37.p3fold.ASCII" "W5testmodel.p3fold.ASCII"
