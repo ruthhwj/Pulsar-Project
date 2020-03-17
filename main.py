@@ -94,15 +94,15 @@ intensities_sim = get_intensities(df_sim, 1)
 chi = fit_measure(intensities_exp, intensities_sim)
 pulsars_args[0][14] = chi
 
-for i in param_dict[1]:
-  for j in param_dict[2]:
-    for k in param_dict[3]:
-      for l in param_dict[4]:
-        for m in param_dict[5]:
-          for n in param_dict[6]:
-            for o in param_dict[7]:
-              for p in param_dict[8]:
-                for q in param_dict[9]:
+for i in range(len(param_dict[1])):
+  for j in range(len(param_dict[2])):
+    for k in range(len(param_dict[3])):
+      for l in range(len(param_dict[4])):
+        for m in range(len(param_dict[5])):
+          for n in range(len(param_dict[6])):
+            for o in range(len(param_dict[7])):
+              for p in range(len(param_dict[8])):
+                for q in range(len(param_dict[9])):
 
                   # set arguments
 
