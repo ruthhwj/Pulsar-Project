@@ -89,11 +89,15 @@ intensities_exp = get_intensities(df_exp, 1)
 subprocess.check_output(pulsar_arg)  # reference pulsar
 pulsars_args[0] = pulsar_arg
 
+print(pulsar_arg)
+
 df_sim = read_pulsar("refpulsar.p3fold.ASCII")
 intensities_sim = get_intensities(df_sim, 1)
 chi = fit_measure(intensities_exp, intensities_sim)
 
 pulsars_args[0].append(chi)
+
+print( "Reference pulsar has a chi squared of " + chi)
 
 for i in range(len(param_dict[1])):
   for j in range(len(param_dict[2])):
@@ -121,7 +125,7 @@ for i in range(len(param_dict[1])):
 
                   pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
 
-                  print(pulsar_arg)
+                  pulsar_arg.pop(14) # weird 14th argument showing up, idk why just get rid
 
                   subprocess.check_output(pulsar_arg)
 
