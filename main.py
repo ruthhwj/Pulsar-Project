@@ -17,8 +17,8 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import minmax_scale
 
 #pulsar arguments list: fakepulsar -cone "1-9" -ellipse "10-12" -cone'13-21' -ellipse '22-24' -a '25' -b '26' -gg'27'
-pulsar_arg=["./pulsar-getter.sh", "0.5", "10.5", "1","15","0.85","45","0.5","7.7","1", "15", "20", "-2.4", "refpulsar.gg","0"] #final arg is placeholder for chisquared
-#[script name, I1, rho1, w1, n1, e1, or1, s2, I2, rho2, w2, n2,, e2, or2, s2, a, b, filename (include .gg), chi]
+pulsar_arg=["./pulsar-getter.sh", "0.5", "10.5", "1","15","0.85","45","0.5","7.7","1", "15", "20", "-2.4", "refpulsar.gg"]
+#[script name, I1, rho1, w1, n1, e1, or1, s2, I2, rho2, w2, n2,, e2, or2, s2, a, b, filename (include .gg)]
 
 pulsars_args = {}  # pulsar_number : pulsar_arg list
 
@@ -122,12 +122,13 @@ for i in range(len(param_dict[1])):
 
                   subprocess.check_output(pulsar_arg)  # run fake Pulsar
 
-                  pulsars_args[int(pulsar_number)] = pulsar_arg
+                  pulsars_args[int(pulsar_number)] = pulsar_arg # dump arg list into dictionary
 
                   df_sim = read_pulsar("SimPulse"+pulsar_number+".p3fold.ASCII")
                   intensities_sim = get_intensities(df_sim, 1)
                   chi = fit_measure(intensities_exp, intensities_sim)
-                  pulsars_args[int(pulsar_number)][14] = chi
+
+                  pulsars_args[int(pulsar_number)].append(chi) # append chi onto list in dictionary
 
 
                   print( "Pulsar "+ pulsar_number + " has a chi squared of " + chi)
