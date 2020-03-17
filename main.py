@@ -7,6 +7,7 @@ Created on Tue Feb 18 09:57:02 2020
 
 import numpy as np
 import pandas as pd
+import csv
 import matplotlib.pyplot as plt
 import subprocess
 import string
@@ -16,9 +17,8 @@ import sklearn
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import minmax_scale
 
-#pulsar arguments list: fakepulsar -cone "1-9" -ellipse "10-12" -cone'13-21' -ellipse '22-24' -a '25' -b '26' -gg'27'
+
 pulsar_arg=["./pulsar-getter.sh", "0.5", "10.5", "1","15","0.85","45","0.5","7.7","1", "15", "20", "-2.4", "refpulsar.gg"]
-#[script name, I1, rho1, w1, n1, e1, or1, s2, I2, rho2, w2, n2,, e2, or2, s2, a, b, filename (include .gg)]
 
 pulsars_args = {}  # pulsar_number : pulsar_arg list
 
@@ -150,3 +150,16 @@ for i in range(len(param_dict[1])):
 
                   os.remove("SimPulse"+pulsar_number+".p3fold.ASCII")
                   os.remove("SimPulse"+pulsar_number+".gg")
+
+csv_file = "Results.csv"
+csv_columns = ["script name", "c1 intensity", "c1 half opening angle of beam", "c1 half opening angle of beamlets", "number of sparks", "eccentricity",
+ "orientation of semi major axis", "c2 intensity", "c2 half opening angle of beam", "half opening angle of beamlets", "number of sparks", "a", "b", "file name","chi"]
+
+try:
+    with open(csv_file, 'w') as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=csv_columns)
+        writer.writeheader()
+        for data in pulsars_args:
+            writer.writerow(data)
+except IOError:
+    print("I/O error")
