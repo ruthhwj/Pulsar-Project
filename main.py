@@ -97,7 +97,7 @@ chi = fit_measure(intensities_exp, intensities_sim)
 
 pulsars_args[0].append(chi)
 
-print( "Reference pulsar has a chi squared of " + chi)
+print( "Reference pulsar has a chi squared of " + str(chi))
 
 for i in range(len(param_dict[1])):
   for j in range(len(param_dict[2])):
