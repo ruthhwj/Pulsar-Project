@@ -92,7 +92,8 @@ pulsars_args[0] = pulsar_arg
 df_sim = read_pulsar("refpulsar.p3fold.ASCII")
 intensities_sim = get_intensities(df_sim, 1)
 chi = fit_measure(intensities_exp, intensities_sim)
-pulsars_args[0][14] = chi
+
+pulsars_args[0].append(chi)
 
 for i in range(len(param_dict[1])):
   for j in range(len(param_dict[2])):
