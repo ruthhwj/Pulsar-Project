@@ -99,6 +99,8 @@ pulsars_args[0].append(chi)
 
 print( "Reference pulsar has a chi squared of " + str(chi))
 
+c = 1
+
 for i in range(len(param_dict[1])):
   for j in range(len(param_dict[2])):
     for k in range(len(param_dict[3])):
@@ -111,7 +113,9 @@ for i in range(len(param_dict[1])):
 
                   # set arguments
 
-                  pulsar_number = str(i + j + k + l + m + n + o + p + q + 1)
+                  pulsar_number = str(c)
+                  c+=1
+
 
                   pulsar_arg[1] = str((param_dict[1][i]))
                   pulsar_arg[2] = str((param_dict[2][j]))
