@@ -109,17 +109,19 @@ for i in range(len(param_dict[1])):
 
                   pulsar_number = str(i + j + k + l + m + n + o + p + q + 1)
 
-                  pulsar_arg[1] = str(param_dict[1][i])
-                  pulsar_arg[2] = str(param_dict[2][j])
-                  pulsar_arg[3] = str(param_dict[3][k])
-                  pulsar_arg[4] = str(param_dict[4][l])
-                  pulsar_arg[5] = str(param_dict[5][m])
-                  pulsar_arg[6] = str(param_dict[6][n])
-                  pulsar_arg[7] = str(param_dict[7][o])
-                  pulsar_arg[8] = str(param_dict[8][p])
-                  pulsar_arg[9] = str(param_dict[9][q])
+                  pulsar_arg[1] = str((param_dict[1][i]))
+                  pulsar_arg[2] = str((param_dict[2][j]))
+                  pulsar_arg[3] = str((param_dict[3][k]))
+                  pulsar_arg[4] = str((param_dict[4][l]))
+                  pulsar_arg[5] = str((param_dict[5][m]))
+                  pulsar_arg[6] = str((param_dict[6][n]))
+                  pulsar_arg[7] = str((param_dict[7][o]))
+                  pulsar_arg[8] = str((param_dict[8][p]))
+                  pulsar_arg[9] = str((param_dict[9][q]))
 
                   pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
+
+                  print(pulsar_arg)
 
                   subprocess.check_output(pulsar_arg)
 
