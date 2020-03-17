@@ -40,39 +40,39 @@ for x in pulsars:
 #def constrain_parameter(): #will likely extend this to individual functions for each paramter or a class
 
 def read_pulsar(string):  # Reads ASCII, returns dataframe  #"weak.all37.p3fold.ASCII" "W5testmodel.p3fold.ASCII"
-    data = ascii.read(string, data_start=1)
-    df = data.to_pandas()
-    return df
+  data = ascii.read(string, data_start=1)
+  df = data.to_pandas()
+  return df
 
 
 def get_intensities(df, flag):  # Reads dataframe, returns 50x2246 array for plotting OR as a list
-    intensities = np.array(df.col4)  # extract intensities column    
-    if flag == 0: 
-	df_pixelarray = pd.DataFrame(np.array(intensities).reshape(50, 2246))# shape into array with dimensions of image
-        return df_pixelarray  # want this for plotting
-    if flag != 0:
-        return intensities  # want this for analysis
+  intensities = np.array(df.col4)  # extract intensities column
+  if flag == 0:
+    df_pixelarray = pd.DataFrame(np.array(intensities).reshape(50, 2246))# shape into array with dimensions of image
+    return df_pixelarray  # want this for plotting
+  if flag != 0:
+    return intensities  # want this for analysis
 
-print(df_pixelarray_exp)
+
 #read in simulated data
 #data_model = ascii.read("", data_start=1)
 
 def plot_pulsar(df_pixelarray):
-    plt.imshow(df_pixelarray, 'twilight', origin='lower', interpolation='none', aspect='auto')
+  plt.imshow(df_pixelarray, 'twilight', origin='lower', interpolation='none', aspect='auto')
 
 #intensities_model = np.array(df_model.col4)
 
 def fit_measure(intensities_ref, intensities_img):
-    ref = minmax_scale(intensities_ref)
-    img = minmax_scale(intensities_img)
+  ref = minmax_scale(intensities_ref)
+  img = minmax_scale(intensities_img)
 
-    DoF, chi = (len(ref) - 1), 0
+  DoF, chi = (len(ref) - 1), 0
 
-    for i in range(len(ref)):
-        x1 = (img[i] - ref[i])
-        if img[i] != 0:
-            chi += x1 * x1 / img[i]
-    return (chi/DoF)
+  for i in range(len(ref)):
+    x1 = (img[i] - ref[i])
+    if img[i] != 0:
+      chi += x1 * x1 / img[i]
+      return (chi/DoF)
 
 
 """ 
@@ -93,11 +93,11 @@ df_exp = read_pulsar("weak.all37.p3fold.ASCII")
 intensities_exp = get_intensities(df_exp, 1)
 
 # loop for each pulsar starts here
-
+"""
 for i in whatever:
-    df_model = read_pulsar("W5testmodel.p3fold.ASCII")
-    intensities_model = get_intensities(df_model, 1)
-    chi = fit_measure(intensities_exp, intensities_model)
-    #append chi to i of the library or whatever 
-
+  df_model = read_pulsar("W5testmodel.p3fold.ASCII")
+  intensities_model = get_intensities(df_model, 1)
+  chi = fit_measure(intensities_exp, intensities_model)
+  #append chi to i of the library or whatever 
+"""
 
