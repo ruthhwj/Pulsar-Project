@@ -17,7 +17,7 @@ import sklearn
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import minmax_scale
 
-
+#push comment
 pulsar_arg=["./pulsar-getter.sh", "0.5", "10.5", "1","15","0.85","45","0.5","7.7","1", "15", "20", "-2.4", "refpulsar.gg"]
 
 pulsars_args = {}  # pulsar_number : pulsar_arg list
