@@ -21,6 +21,7 @@ from sklearn.preprocessing import minmax_scale
 pulsar_arg=["./pulsar-getter.sh", "0.5", "10.5", "1","15","0.85","45","0.5","7.7","1", "15", "20", "-2.4", "refpulsar.gg"]
 
 pulsars_args = {}  # pulsar_number : pulsar_arg list
+results = []
 
 param_dict = {
   1 : list(np.arange(0.4, 0.7, 0.1)),  # intensity
@@ -66,7 +67,7 @@ def fit_measure(intensities_ref, intensities_img):
     x1 = (img[i] - ref[i])
     if img[i] != 0:
       chi += x1 * x1 / img[i]
-      return (chi/DoF)
+      return (chi/(DoF*noise)) #noise here?
 
 
 """ 
@@ -83,91 +84,64 @@ def fit_measure(intensities_ref, intensities_img):
 
 # Main code starts here
 
+
 df_exp = read_pulsar("weak.all37.p3fold.ASCII")
 intensities_exp = get_intensities(df_exp, 1)
 
-subprocess.check_output(pulsar_arg)  # reference pulsar
-pulsars_args[0] = pulsar_arg
-
-print(pulsar_arg)
-
 df_sim = read_pulsar("refpulsar.p3fold.ASCII")
 intensities_sim = get_intensities(df_sim, 1)
+
+
+
+noise_array = np.array(intensities_exp).reshape(50, 2246)
+# find average of white noise in off pulse region, col 0->1450 and 1950->2246
+x1 = (noise_array[:, 0:1450])
+x2 = (noise_array[:, 1950:2246])
+
+noise = (1450 / (1450 + 296)) * np.mean(x1) + (296 / (1450 + 296)) * np.mean(x2)
+print(noise)
+
+
+
+
 chi = fit_measure(intensities_exp, intensities_sim)
 
-pulsars_args[0].append(chi)
+results.append([0.5, chi])
 
 print( "Reference pulsar has a chi squared of " + str(chi))
 
 c = 1
 
-noise = np.array(intensities_exp).reshape(50, 2246)
-# find average of white noise in off pulse region, col 0->1450 and 1950->2246
-x1 = (noise[:, 0:1450])
-x2 = (noise[:, 1950:2246])
 
-noise = (1450/(1450+296))np.mean(x1)+(296/(1450+296))np.mean(x2)
-print(noise)
+
 
 for i in range(len(param_dict[1])):
-  for j in range(len(param_dict[2])):
-    for k in range(len(param_dict[3])):
-      for l in range(len(param_dict[4])):
-        for m in range(len(param_dict[5])):
-          for n in range(len(param_dict[6])):
-            for o in range(len(param_dict[7])):
-              for p in range(len(param_dict[8])):
-                for q in range(len(param_dict[9])):
+ # set arguments
+ pulsar_number = str(c)
+ c+=1
 
-                  # set arguments
+ pulsar_arg[1] = str((param_dict[1][i]))
+ pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
 
-                  pulsar_number = str(c)
-                  c+=1
+ #pulsar_arg.pop(14) # weird 14th argument showing up, idk why just get rid
 
 
-                  pulsar_arg[1] = str((param_dict[1][i]))
-                  pulsar_arg[2] = str((param_dict[2][j]))
-                  pulsar_arg[3] = str((param_dict[3][k]))
-                  pulsar_arg[4] = str((param_dict[4][l]))
-                  pulsar_arg[5] = str((param_dict[5][m]))
-                  pulsar_arg[6] = str((param_dict[6][n]))
-                  pulsar_arg[7] = str((param_dict[7][o]))
-                  pulsar_arg[8] = str((param_dict[8][p]))
-                  pulsar_arg[9] = str((param_dict[9][q]))
+ subprocess.check_output(pulsar_arg)
 
-                  pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
+ df_sim = read_pulsar("SimPulse"+pulsar_number+".gg.D.p3fold.ASCII")
+ intensities_sim = get_intensities(df_sim, 1)
 
-                  pulsar_arg.pop(14) # weird 14th argument showing up, idk why just get rid
+ chi = fit_measure(intensities_exp, intensities_sim)
 
-                  print(pulsar_arg)
+ print( "Pulsar "+ pulsar_number + " has a chi squared of " + str(chi))
+ results.append([(param_dict[1][i]), chi])
 
-                  subprocess.check_output(pulsar_arg)
-
-                  pulsars_args[int(pulsar_number)] = pulsar_arg # dump arg list into dictionary
-
-                  df_sim = read_pulsar("SimPulse"+pulsar_number+".p3fold.ASCII")
-                  intensities_sim = get_intensities(df_sim, 1)
-                  chi = fit_measure(intensities_exp, intensities_sim)
-
-                  pulsars_args[int(pulsar_number)].append(chi) # append chi onto list in dictionary
+#clean up
+ os.remove("SimPulse"+pulsar_number+".gg.D.normalised")
+ os.remove("SimPulse"+pulsar_number+".gg.D.p3fold.ASCII")
 
 
-                  print( "Pulsar "+ pulsar_number + " has a chi squared of " + str(chi))
-
-                  #clean up
-
-                  os.remove("SimPulse"+pulsar_number+".p3fold.ASCII")
-                  os.remove("SimPulse"+pulsar_number+".gg")
-
-csv_file = "Results.csv"
-csv_columns = ["script name", "c1 intensity", "c1 half opening angle of beam", "c1 half opening angle of beamlets", "number of sparks", "eccentricity",
- "orientation of semi major axis", "c2 intensity", "c2 half opening angle of beam", "half opening angle of beamlets", "number of sparks", "a", "b", "file name","chi"]
-
-try:
-    with open(csv_file, 'w') as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=csv_columns)
-        writer.writeheader()
-        for data in pulsars_args:
-            writer.writerow(data)
-except IOError:
-    print("I/O error")
+#save results
+with open("intensity_results.txt", "w") as txt_file:
+  for line in results:
+    txt_file.write(" ".join(line) + "\n")
