@@ -101,6 +101,14 @@ print( "Reference pulsar has a chi squared of " + str(chi))
 
 c = 1
 
+noise = np.array(intensities_exp).reshape(50, 2246)
+# find average of white noise in off pulse region, col 0->1450 and 1950->2246
+x1 = (noise[:, 0:1450])
+x2 = (noise[:, 1950:2246])
+
+noise = (1450/(1450+296))np.mean(x1)+(296/(1450+296))np.mean(x2)
+print(noise)
+
 for i in range(len(param_dict[1])):
   for j in range(len(param_dict[2])):
     for k in range(len(param_dict[3])):
