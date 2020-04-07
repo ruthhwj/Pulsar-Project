@@ -96,7 +96,8 @@ df_exp = read_pulsar("norm_exp.ASCII")
 intensities_exp = get_intensities(df_exp, 1)
 
 
-for i in range(len(param_dict[1])):
+#for i in range(len(param_dict[1]):
+while c < 30:
  # set arguments
  pulsar_number = str(c)
  c+=1
@@ -104,8 +105,11 @@ for i in range(len(param_dict[1])):
  #pulsar_arg[1] = str((param_dict[1][i]))
  pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
 
- pulsar_arg[1] = str(rd.uniform(0.1, 0.8))
- pulsar_arg[7] = str(rd.uniform(0.1, 0.8))
+ p1 = rd.uniform(0.1,0.8)
+ p2 = rd.uniform(0.1,0.8)
+
+ pulsar_arg[1] = str(p1)
+ pulsar_arg[7] = str(p2)
 
  #pulsar_arg.pop(14) # weird 14th argument showing up, idk why just get rid
 
@@ -119,9 +123,9 @@ for i in range(len(param_dict[1])):
 
  print( "Pulsar "+ pulsar_number + " has a chi squared of " + str(chi))
  #results.append([(param_dict[1][i]), chi])
- results.append([float(pulsar_arg[1]), float(pulsar_arg[7]), chi])
+ results.append([p1, p2, chi])
 
-#clean up
+ #clean up
  os.remove("SimPulse" + pulsar_number + ".gg")
  os.remove("SimPulse"+pulsar_number+".gg.D.normalised")
  os.remove("SimPulse"+pulsar_number+".gg.noise")
