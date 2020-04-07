@@ -103,6 +103,8 @@ while c < 30:
  pulsar_arg[1] = str(p1)
  pulsar_arg[7] = str(p2)
 
+
+
  #pulsar_arg.pop(14) # weird 14th argument showing up, idk why just get rid
 
 
@@ -114,6 +116,8 @@ while c < 30:
  chi = fit_measure(intensities_exp, intensities_sim)
 
  print( "Pulsar "+ pulsar_number + " has a chi squared of " + str(chi))
+ print("(p1,p2) =(" +p1+","+p2+")")
+
  #results.append([(param_dict[1][i]), chi])
  results.append([p1, p2, chi])
 
