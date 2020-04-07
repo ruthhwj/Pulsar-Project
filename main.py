@@ -89,7 +89,7 @@ intensities_exp = get_intensities(df_exp, 1)
 
 
 #for i in range(len(param_dict[1]):
-while c < 30:
+while c < 50:
  # set arguments
  pulsar_number = str(c)
  c+=1
@@ -127,4 +127,4 @@ while c < 30:
  os.remove("SimPulse"+pulsar_number+".gg.final.ASCII")
 
 
-np.savetxt('results_p1&p2.txt', results, delimiter=',')
+np.savetxt('results_p1p2.txt', results, delimiter=',')
