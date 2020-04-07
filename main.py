@@ -24,7 +24,7 @@ pulsars_args = {}  # pulsar_number : pulsar_arg list
 results = []
 
 param_dict = {
-  1 : list(np.arange(0.4, 0.7, 0.1)),  # intensity
+  1 : list(np.arange(0.3, 0.8, 0.1)),  # intensity
   2 : list(np.arange(10, 11.5, 0.5)),  # half opening angle of beam
   3 : list(np.arange(0.5, 2, 0.5)),  # half opening angle of beamlets
   4 : list(np.arange(14, 17, 1)),  # number of sparks
@@ -58,15 +58,13 @@ def plot_pulsar(df_pixelarray):
 
 
 def fit_measure(intensities_ref, intensities_img):
-  ref = minmax_scale(intensities_ref) # concerned about validity of doing this
-  img = minmax_scale(intensities_img)
 
-  DoF, chi = (len(ref) - 1), 0
+  DoF, chi = (len(intensities_ref) - 1), 0
 
-  for i in range(len(ref)):
-    x1 = (img[i] - ref[i])
-    if img[i] != 0:
-      chi += x1 * x1 / img[i]
+  for i in range(len(intensities_ref)):
+    x1 = (intensities_img[i] - intensities_ref[i])
+    if intensities_img[i] != 0:
+      chi += x1 * x1 / intensities_img[i]
       return (chi/(DoF))
 
 
@@ -85,13 +83,6 @@ def fit_measure(intensities_ref, intensities_img):
 # Main code starts here
 
 
-df_exp = read_pulsar("norm_exp.ASCII")
-intensities_exp = get_intensities(df_exp, 1)
-
-df_sim = read_pulsar("testmodel.gg.final.ASCII")
-intensities_sim = get_intensities(df_sim, 1)
-
-
 
 #noise_array = np.array(intensities_exp).reshape(50, 2246)
 # find average of white noise in off pulse region, col 0->1450 and 1950->2246
@@ -101,18 +92,10 @@ intensities_sim = get_intensities(df_sim, 1)
 #noise = (1450 / (1450 + 296)) * np.mean(x1) + (296 / (1450 + 296)) * np.mean(x2)
 #print(noise)
 
-
-
-
-chi = fit_measure(intensities_exp, intensities_sim)
-
-results.append([0.5, chi])
-
-print( "Reference pulsar has a chi squared of " + str(chi))
-
 c = 1
 
-
+df_exp = read_pulsar("norm_exp.ASCII")
+intensities_exp = get_intensities(df_exp, 1)
 
 
 for i in range(len(param_dict[1])):
@@ -137,12 +120,12 @@ for i in range(len(param_dict[1])):
  results.append([(param_dict[1][i]), chi])
 
 #clean up
+ os.remove("SimPulse" + pulsar_number + ".gg")
  os.remove("SimPulse"+pulsar_number+".gg.D.normalised")
  os.remove("SimPulse"+pulsar_number+".gg.noise")
  os.remove("SimPulse"+pulsar_number+".gg.final.ASCII")
 
 
-#save results
-with open("intensity_results.txt", "w") as txt_file:
-  for line in results:
-    txt_file.write(" ".join(line) + "\n")
+
+np.savetxt('results.txt', results, delimiter=',')
+np.save("results", results)
