@@ -104,8 +104,8 @@ for i in range(len(param_dict[1])):
  #pulsar_arg[1] = str((param_dict[1][i]))
  pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
 
- pulsar_arg[1] = rd.uniform(0.1, 0.8)
- pulsar_arg[7] = rd.uniform(0.1, 0.8)
+ pulsar_arg[1] = str(rd.uniform(0.1, 0.8))
+ pulsar_arg[7] = str(rd.uniform(0.1, 0.8))
 
  #pulsar_arg.pop(14) # weird 14th argument showing up, idk why just get rid
 
@@ -119,7 +119,7 @@ for i in range(len(param_dict[1])):
 
  print( "Pulsar "+ pulsar_number + " has a chi squared of " + str(chi))
  #results.append([(param_dict[1][i]), chi])
- results.append([pulsar_arg[1], pulsar_arg[7], chi])
+ results.append([float(pulsar_arg[1]), float(pulsar_arg[7]), chi])
 
 #clean up
  os.remove("SimPulse" + pulsar_number + ".gg")
