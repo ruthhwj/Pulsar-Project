@@ -85,10 +85,10 @@ def fit_measure(intensities_ref, intensities_img):
 # Main code starts here
 
 
-df_exp = read_pulsar("weak.all37.p3fold.ASCII")
+df_exp = read_pulsar("norm_exp.ASCII")
 intensities_exp = get_intensities(df_exp, 1)
 
-df_sim = read_pulsar("refpulsar.p3fold.ASCII")
+df_sim = read_pulsar("testmodel.gg.final.ASCII")
 intensities_sim = get_intensities(df_sim, 1)
 
 
