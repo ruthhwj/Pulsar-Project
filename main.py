@@ -59,13 +59,13 @@ def plot_pulsar(df_pixelarray):
 
 def fit_measure(intensities_ref, intensities_img):
 
-  DoF, chi = (len(intensities_ref) - 1), 0
+  chi = 0
 
   for i in range(len(intensities_ref)):
     x1 = (intensities_img[i] - intensities_ref[i])
     if intensities_img[i] != 0:
-      chi += x1 * x1 / intensities_img[i]
-      return (chi/(DoF))
+      chi += abs(x1 * x1 / intensities_img[i])
+      return (chi)
 
 
 """ 
@@ -128,4 +128,3 @@ for i in range(len(param_dict[1])):
 
 
 np.savetxt('results.txt', results, delimiter=',')
-np.save("results", results)
