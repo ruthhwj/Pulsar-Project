@@ -7,15 +7,13 @@ Created on Tue Feb 18 09:57:02 2020
 
 import numpy as np
 import pandas as pd
-import csv
+import random as rd
 import matplotlib.pyplot as plt
 import subprocess
 import string
 from astropy.io import ascii
 import glob, os
-import sklearn
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.preprocessing import minmax_scale
+
 
 #push comment
 pulsar_arg=["./pulsar-getter.sh", "0.5", "10.5", "1","15","0.85","45","0.5","7.7","1", "15", "20", "-2.4", "refpulsar.gg"]
@@ -103,8 +101,11 @@ for i in range(len(param_dict[1])):
  pulsar_number = str(c)
  c+=1
 
- pulsar_arg[1] = str((param_dict[1][i]))
+ #pulsar_arg[1] = str((param_dict[1][i]))
  pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
+
+ pulsar_arg[1] = rd.uniform(0.1, 0.8)
+ pulsar_arg[7] = rd.uniform(0.1, 0.8)
 
  #pulsar_arg.pop(14) # weird 14th argument showing up, idk why just get rid
 
@@ -117,7 +118,8 @@ for i in range(len(param_dict[1])):
  chi = fit_measure(intensities_exp, intensities_sim)
 
  print( "Pulsar "+ pulsar_number + " has a chi squared of " + str(chi))
- results.append([(param_dict[1][i]), chi])
+ #results.append([(param_dict[1][i]), chi])
+ results.append([pulsar_arg[1], pulsar_arg[7], chi])
 
 #clean up
  os.remove("SimPulse" + pulsar_number + ".gg")
