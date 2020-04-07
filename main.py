@@ -42,11 +42,13 @@ def read_pulsar(string): # Reads ASCII, returns dataframe  #"weak.all37.p3fold.A
 
 def get_intensities(df, flag):  # Reads dataframe, returns 50x2246 array for plotting OR as a list
   intensities = np.array(df.col4)  # extract intensities column
+  pixelarray = np.array(intensities).reshape(50, 2246)  # shape into array with dimensions of image
+  croppedarray = pixelarray[:, 1450:2000] #rough onpulse region of exp data
+
   if flag == 0:
-    df_pixelarray = pd.DataFrame(np.array(intensities).reshape(50, 2246))# shape into array with dimensions of image
-    return df_pixelarray  # want this for plotting
+    return croppedarray # want this for plotting
   if flag != 0:
-    return intensities  # want this for analysis
+    return croppedarray.flatten()  # want this for analysis
 
 
 
@@ -79,16 +81,6 @@ def fit_measure(intensities_ref, intensities_img):
  """
 
 # Main code starts here
-
-
-
-#noise_array = np.array(intensities_exp).reshape(50, 2246)
-# find average of white noise in off pulse region, col 0->1450 and 1950->2246
-#x1 = (noise_array[:, 0:1450])
-#x2 = (noise_array[:, 1950:2246])
-
-#noise = (1450 / (1450 + 296)) * np.mean(x1) + (296 / (1450 + 296)) * np.mean(x2)
-#print(noise)
 
 c = 1
 
@@ -128,9 +120,7 @@ while c < 30:
  #clean up
  os.remove("SimPulse" + pulsar_number + ".gg")
  os.remove("SimPulse"+pulsar_number+".gg.D.normalised")
- os.remove("SimPulse"+pulsar_number+".gg.noise")
  os.remove("SimPulse"+pulsar_number+".gg.final.ASCII")
 
 
-
-np.savetxt('results.txt', results, delimiter=',')
+np.savetxt('results_p1&p2.txt', results, delimiter=',')
