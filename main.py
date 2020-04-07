@@ -67,7 +67,7 @@ def fit_measure(intensities_ref, intensities_img):
     x1 = (img[i] - ref[i])
     if img[i] != 0:
       chi += x1 * x1 / img[i]
-      return (chi/(DoF*noise)) #noise here?
+      return (chi/(DoF))
 
 
 """ 
@@ -93,13 +93,13 @@ intensities_sim = get_intensities(df_sim, 1)
 
 
 
-noise_array = np.array(intensities_exp).reshape(50, 2246)
+#noise_array = np.array(intensities_exp).reshape(50, 2246)
 # find average of white noise in off pulse region, col 0->1450 and 1950->2246
-x1 = (noise_array[:, 0:1450])
-x2 = (noise_array[:, 1950:2246])
+#x1 = (noise_array[:, 0:1450])
+#x2 = (noise_array[:, 1950:2246])
 
-noise = (1450 / (1450 + 296)) * np.mean(x1) + (296 / (1450 + 296)) * np.mean(x2)
-print(noise)
+#noise = (1450 / (1450 + 296)) * np.mean(x1) + (296 / (1450 + 296)) * np.mean(x2)
+#print(noise)
 
 
 
@@ -128,7 +128,7 @@ for i in range(len(param_dict[1])):
 
  subprocess.check_output(pulsar_arg)
 
- df_sim = read_pulsar("SimPulse"+pulsar_number+".gg.D.p3fold.ASCII")
+ df_sim = read_pulsar("SimPulse"+pulsar_number+".gg.final.ASCII")
  intensities_sim = get_intensities(df_sim, 1)
 
  chi = fit_measure(intensities_exp, intensities_sim)
@@ -138,7 +138,8 @@ for i in range(len(param_dict[1])):
 
 #clean up
  os.remove("SimPulse"+pulsar_number+".gg.D.normalised")
- os.remove("SimPulse"+pulsar_number+".gg.D.p3fold.ASCII")
+ os.remove("SimPulse"+pulsar_number+".gg.noise")
+ os.remove("SimPulse"+pulsar_number+".gg.final.ASCII")
 
 
 #save results
