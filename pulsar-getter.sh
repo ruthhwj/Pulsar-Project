@@ -5,5 +5,5 @@ pmod -norm_global -dev /NULL -ext gg.D.normalised -debase ${13}
 #(creates ${13}.D.normalised)
 pmod -addnoise 0.0432210225 ${13}.D.normalised -output ${13}.noise
 #(creates ${13}.noise)
-pmod -norm_global -dev /NULL -templatedata weak.all37.p3fold.ASCII -align -oformat ASCII ${13}.noise -output ${13}.final.ASCII
+pmod -norm_global -dev /NULL -templatedata norm_exp.ASCII -align -oformat ASCII ${13}.noise -output ${13}.final.ASCII
 #(creates ${13}.final.ASCII)
