@@ -64,7 +64,7 @@ def fit_measure(intensities_ref, intensities_img):
   for i in range(len(intensities_ref)):
     x1 = (intensities_img[i] - intensities_ref[i])
     if intensities_img[i] != 0:
-      chi += abs(x1 * x1 / intensities_img[i])
+      chi += abs(x1 * x1 / intensities_ref[i])
       return (chi)
 
 
