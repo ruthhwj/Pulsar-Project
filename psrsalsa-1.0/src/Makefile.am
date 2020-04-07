@@ -1,0 +1,1 @@
+SUBDIRS=slalib lib prog
