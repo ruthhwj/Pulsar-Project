@@ -32,7 +32,7 @@ data1d = pd.read_csv('results_b1.txt', sep=",", header=None)
 data1d.columns = ["b1","fmeasure"]
 
 #PLOT 2: scatter plot
-plt.scatter(data1d.b1, data1d.fmeasure, c=data1d.fmeasure, cmap='BrBG', linewidth=1)#cool,BrBg, twilight_shifted
+plt.scatter(data1d.b1, data1d.fmeasure, linewidth=1)#cool,BrBg, twilight_shifted
 plt.xlabel('Cone 1 half opening beam angle')
 plt.ylabel('Fit measure')
 plt.show()
