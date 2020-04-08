@@ -21,10 +21,15 @@ def read_pulsar(string):  # Reads ASCII, returns dataframe  #"weak.all37.p3fold.
 
         #scatter plots of the 2D Monte Carlo results
 
-data = pd.read_csv('results_p1p2.txt', sep=",", header=None)
+#data = pd.read_csv('results_p1p2.txt', sep=",", header=None)
 
 #08/04/20 results_p1p2 is the N=50 monte carlo simulation
 # p1 and p2 were randomly generated between 0.1 and 0.8
+
+data = pd.read_csv('results_p1p2N500.txt', sep=",", header=None)
+
+#09/04/20 results_p1p2 is the N=499 monte carlo simulation
+# p1 and p2 were randomly generated between 0 and 1
 
 data.columns = ["p1", "p2", "fmeasure"] #cone 1 intensity, cone 2 intensity, fit measure
 
