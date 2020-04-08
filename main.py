@@ -89,7 +89,7 @@ intensities_exp = get_intensities(df_exp, 1)
 
 
 #for i in range(len(param_dict[1]):
-while c < 50:
+while c < 500:
  # set arguments
  pulsar_number = str(c)
  c+=1
@@ -97,8 +97,8 @@ while c < 50:
  #pulsar_arg[1] = str((param_dict[1][i]))
  pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
 
- p1 = rd.uniform(0.1,0.8)
- p2 = rd.uniform(0.1,0.8)
+ p1 = rd.uniform(0,1)
+ p2 = rd.uniform(0,1)
 
  pulsar_arg[1] = str(p1)
  pulsar_arg[7] = str(p2)
