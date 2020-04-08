@@ -43,7 +43,7 @@ def read_pulsar(string): # Reads ASCII, returns dataframe  #"weak.all37.p3fold.A
 def get_intensities(df, flag):  # Reads dataframe, returns 50x2246 array for plotting OR as a list
   intensities = np.array(df.col4)  # extract intensities column
   pixelarray = np.array(intensities).reshape(50, 2246)  # shape into array with dimensions of image
-  croppedarray = pixelarray[:, 1450:2000] #rough onpulse region of exp data
+  croppedarray = pixelarray[:, 1350:2000] #rough onpulse region of exp data
 
   if flag == 0:
     return croppedarray # want this for plotting
