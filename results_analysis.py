@@ -24,7 +24,7 @@ def read_pulsar(string):  # Reads ASCII, returns dataframe  #"weak.all37.p3fold.
 data = pd.read_csv('results_p1p2.txt', sep=",", header=None)
 
 #08/04/20 results_p1p2 is the N=50 monte carlo simulation
-# p1 and p2 were randomly generated between 0.1 and 0.8.
+# p1 and p2 were randomly generated between 0.1 and 0.8
 
 data.columns = ["p1", "p2", "fmeasure"] #cone 1 intensity, cone 2 intensity, fit measure
 
