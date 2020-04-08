@@ -28,7 +28,7 @@ def read_pulsar(string):  # Reads ASCII, returns dataframe  #"weak.all37.p3fold.
 
 data = pd.read_csv('results_p1p2N500.txt', sep=",", header=None)
 
-#09/04/20 results_p1p2 is the N=499 monte carlo simulation
+#09/04/20 results_p1p2 is the N=500 monte carlo simulation
 # p1 and p2 were randomly generated between 0 and 1
 
 data.columns = ["p1", "p2", "fmeasure"] #cone 1 intensity, cone 2 intensity, fit measure
@@ -36,12 +36,18 @@ data.columns = ["p1", "p2", "fmeasure"] #cone 1 intensity, cone 2 intensity, fit
 #rdata = data[data['chi'] > 10] # can crop out crazy outliers that make the plots a bit hard to interpret
 
 dplot = plt.figure().gca(projection='3d')
-dplot.scatter(data.p1, data.p2, data.fmeasure )
+dplot.scatter(data.p1, data.p2, data.fmeasure,  c=data.fmeasure )
 dplot.set_xlabel('Cone 1 intensity')
 dplot.set_ylabel('Cone 2 intensity')
 dplot.set_zlabel('Fit measure')
 plt.show()
 
+""""
+Looking at the N=500 data shows that the fit measures for (p1,p2) = (1,0) and (0.4,0) are very similar
+this is due to global_norm normalising the peak intensity value to 1 regardless of intensity.
+so we need to analyse the ratio of p1/p2
+
+"""
 plt.scatter(data.p1, data.p2, c=data.fmeasure, cmap='cool')
 plt.xlabel('Cone 1 intensity')
 plt.ylabel('Cone 2 intensity')

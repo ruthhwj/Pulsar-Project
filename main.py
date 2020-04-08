@@ -97,16 +97,10 @@ while c < 500:
  #pulsar_arg[1] = str((param_dict[1][i]))
  pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
 
- p1 = rd.uniform(0,1)
- p2 = rd.uniform(0,1)
-
- pulsar_arg[1] = str(p1)
- pulsar_arg[7] = str(p2)
+ b1 = rd.uniform(5,15)
 
 
-
- #pulsar_arg.pop(14) # weird 14th argument showing up, idk why just get rid
-
+ pulsar_arg[2] = str(b1)
 
  subprocess.check_output(pulsar_arg)
 
@@ -116,10 +110,9 @@ while c < 500:
  chi = fit_measure(intensities_exp, intensities_sim)
 
  print( "Pulsar "+ pulsar_number + " has a chi squared of " + str(chi))
- print("(p1,p2) =(" +str(p1)+","+str(p2)+")")
+ print("b1 ="+b1 )
 
- #results.append([(param_dict[1][i]), chi])
- results.append([p1, p2, chi])
+ results.append([b1, chi])
 
  #clean up
  os.remove("SimPulse" + pulsar_number + ".gg")
@@ -127,4 +120,4 @@ while c < 500:
  os.remove("SimPulse"+pulsar_number+".gg.final.ASCII")
 
 
-np.savetxt('results_p1p2.txt', results, delimiter=',')
+np.savetxt('results_b1.txt', results, delimiter=',')
