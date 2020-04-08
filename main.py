@@ -110,7 +110,7 @@ while c < 500:
  chi = fit_measure(intensities_exp, intensities_sim)
 
  print( "Pulsar "+ pulsar_number + " has a chi squared of " + str(chi))
- print("b1 ="+b1 )
+ print("b1 ="+str(b1) )
 
  results.append([b1, chi])
 
