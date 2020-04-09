@@ -16,7 +16,7 @@ import glob, os
 
 
 #push comment
-pulsar_arg=["./pulsar-getter.sh", "0.5", "10.5", "1","15","0.85","45","0.5","7.7","1", "15", "20", "-2.4", "refpulsar.gg"]
+pulsar_arg=["./pulsar-getter.sh", "0.5", "8.773202", "1","15","0.85","45","0.5","7.7","1", "15", "20", "-2.4", "refpulsar.gg"]
 
 pulsars_args = {}  # pulsar_number : pulsar_arg list
 results = []
@@ -90,7 +90,7 @@ intensities_exp = get_intensities(df_exp, 1)
 subprocess.check_output(pulsar_arg)
 
 df_ref = read_pulsar("refpulsar.gg.final.ASCII")
-intensities_ref = get_intensities(df_exp, 1)
+intensities_ref = get_intensities(df_ref, 1)
 
 
 os.remove("refpulsar.gg")
@@ -109,11 +109,8 @@ while c < 501:
 
  pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
 
- b1 = rd.uniform(5,15)
  b2 = rd.uniform(5,15)
 
-
- pulsar_arg[2] = str(b1)
  pulsar_arg[8] = str(b2)
 
  subprocess.check_output(pulsar_arg)
@@ -124,9 +121,9 @@ while c < 501:
  chi = fit_measure(intensities_exp, intensities_sim)
 
  print( "Pulsar "+ pulsar_number + " has a fit measure of " + str(chi))
- print("(b1,b2) =("+str(b1)+","+str(b2)+")")
+ print("b2 =" + str(b2))
 
- results.append([b1, b2, chi])
+ results.append([b2, chi])
 
  #clean up
  os.remove("SimPulse" + pulsar_number + ".gg")
@@ -134,4 +131,4 @@ while c < 501:
  os.remove("SimPulse"+pulsar_number+".gg.final.ASCII")
 
 
-np.savetxt('results_b1b2.txt', results, delimiter=',')
+np.savetxt('results_b2.txt', results, delimiter=',')

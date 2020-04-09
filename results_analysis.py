@@ -31,12 +31,14 @@ data1d = pd.read_csv('results_b1.txt', sep=",", header=None)
 
 data1d.columns = ["b1","fmeasure"]
 
+print(data1d[data1d.fmeasure == data1d.fmeasure.min()])
+
 #PLOT 2: scatter plot
 plt.scatter(data1d.b1, data1d.fmeasure, linewidth=1)#cool,BrBg, twilight_shifted
 plt.xlabel('Cone 1 half opening beam angle')
 plt.ylabel('Fit measure')
 plt.show()
-
+""""
         #######scatter plots of the 2D Monte Carlo results
 
 #data = pd.read_csv('results_p1p2.txt', sep=",", header=None)
@@ -49,6 +51,10 @@ data = pd.read_csv('results_p1p2N500.txt', sep=",", header=None)
 #08/04/20 results_p1p2 is the N=500 monte carlo simulation
 # p1 and p2 were randomly generated between 0 and 1
 
+data = pd.read_csv('results_b1b2.txt', sep=",", header=None)
+
+#09/04/20 results_b1b2 is the N=500 monte carlo simulation
+# b1 and b2 were randomly generated between 5 and 15 (half opening angle of the beam)
 
 data.columns = ["p1", "p2", "fmeasure"] #cone 1 intensity, cone 2 intensity, fit measure
 #rdata = data[data['chi'] > 10] # can crop out crazy outliers that make the plots a bit hard to interpret
@@ -57,23 +63,23 @@ data.columns = ["p1", "p2", "fmeasure"] #cone 1 intensity, cone 2 intensity, fit
 #PLOT 1: 3d scatter plot
 dplot = plt.figure().gca(projection='3d')
 dplot.scatter(data.p1, data.p2, data.fmeasure,  c=data.fmeasure, cmap='BrBG', linewidth=1 )
-dplot.set_xlabel('Cone 1 intensity')
-dplot.set_ylabel('Cone 2 intensity')
+dplot.set_xlabel('Cone 1 half opening angle')
+dplot.set_ylabel('Cone 2 half opening angle')
 dplot.set_zlabel('Fit measure')
 plt.show()
 
-""""
-Looking at the N=500 data shows that the fit measures for (p1,p2) = (1,0) and (0.4,0) are very similar
-this is due to global_norm normalising the peak intensity value to 1 regardless of intensity.
-so we need to analyse the ratio of p1/p2
+"""
+#Looking at the N=500 data shows that the fit measures for (p1,p2) = (1,0) and (0.4,0) are very similar
+#this is due to global_norm normalising the peak intensity value to 1 regardless of intensity.
+#so we need to analyse the ratio of p1/p2
 
 """
 #PLOT 2: present as 2d with colourmap as fitmeasure
 plt.scatter(data.p1, data.p2, c=data.fmeasure, cmap='BrBG', linewidth=1)#cool,BrBg, twilight_shifted
-plt.xlabel('Cone 1 intensity')
-plt.ylabel('Cone 2 intensity')
+plt.xlabel('Cone 1 half opening angle')
+plt.ylabel('Cone 2 half opening angle')
 cbar = plt.colorbar()
-cbar.set_label('fit measure')
+cbar.set_label('Fit measure')
 
 plt.show()
 #PLOT 3: make it a 3d surface
@@ -82,7 +88,7 @@ ax.plot_trisurf(data.p1, data.p2, data.fmeasure, cmap='cool') #the sickest plot 
 plt.show()
 
       #Histograms of the pixel intensity ranges
-""""
+
 df_exp = read_pulsar("weak.all37.p3fold.ASCII.normalised.ASCII")
 df_model_D = read_pulsar("testmodel.gg.D.p3fold.ASCII")
 df_model = read_pulsar("testmodel.noise.normalised.ASCII")
