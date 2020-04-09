@@ -87,20 +87,34 @@ c = 1
 df_exp = read_pulsar("norm_exp.ASCII")
 intensities_exp = get_intensities(df_exp, 1)
 
+subprocess.check_output(pulsar_arg)
 
-#for i in range(len(param_dict[1]):
-while c < 500:
+df_ref = read_pulsar("refpulsar.gg.final.ASCII")
+intensities_ref = get_intensities(df_exp, 1)
+
+
+os.remove("refpulsar.gg")
+os.remove("refpulsar.gg.D.normalised")
+os.remove("refpulsar.gg.final.ASCII")
+
+chi = fit_measure(intensities_exp, intensities_ref)
+
+print( "Reference pulsar has a fit measure of " + str(chi))
+
+
+while c < 501:
  # set arguments
  pulsar_number = str(c)
  c+=1
 
- #pulsar_arg[1] = str((param_dict[1][i]))
  pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
 
  b1 = rd.uniform(5,15)
+ b2 = rd.uniform(5,15)
 
 
  pulsar_arg[2] = str(b1)
+ pulsar_arg[8] = str(b2)
 
  subprocess.check_output(pulsar_arg)
 
@@ -109,10 +123,10 @@ while c < 500:
 
  chi = fit_measure(intensities_exp, intensities_sim)
 
- print( "Pulsar "+ pulsar_number + " has a chi squared of " + str(chi))
- print("b1 ="+str(b1) )
+ print( "Pulsar "+ pulsar_number + " has a fit measure of " + str(chi))
+ print("(b1,b2) =("+str(b1)+","+str(b2)+")")
 
- results.append([b1, chi])
+ results.append([b1, b2, chi])
 
  #clean up
  os.remove("SimPulse" + pulsar_number + ".gg")
@@ -120,4 +134,4 @@ while c < 500:
  os.remove("SimPulse"+pulsar_number+".gg.final.ASCII")
 
 
-np.savetxt('results_b1.txt', results, delimiter=',')
+np.savetxt('results_b1b2.txt', results, delimiter=',')
