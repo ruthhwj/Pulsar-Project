@@ -18,7 +18,7 @@ import glob, os
 #push comment
 pulsar_arg=["./pulsar-getter.sh", "0.5", "8.773202", "1","15","0.85","45","0.5","7.7","1", "15", "20", "-2.4", "refpulsar.gg"]
 
-pulsars_args = {}  # pulsar_number : pulsar_arg list
+pulsars_args = {}
 results = []
 
 param_dict = {
