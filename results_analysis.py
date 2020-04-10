@@ -24,18 +24,26 @@ def read_pulsar(string):  # Reads ASCII, returns dataframe  #"weak.all37.p3fold.
 
         #######scatter plots of the 1D Monte Carlo results
 
-data1d = pd.read_csv('results_b1.txt', sep=",", header=None)
+#data1d = pd.read_csv('results_b1.txt', sep=",", header=None)
 
 # 08/04/20 results_b1 is the N=500 monte carlo simulation
-# the half opening angle of the first cone was randomly generated between 5 and 5 degrees
+# the half opening angle of the first cone was randomly generated between 5 and 15 degrees
+# min fmeasure given by b1 = 8.773202
 
-data1d.columns = ["b1","fmeasure"]
+data1d = pd.read_csv('results_b2.txt', sep=",", header=None)
+
+# 09/04/20 results_b2 is the N=500 monte carlo simulation
+# the half opening angle of the second cone was randomly generated between 5 and 15 degrees
+# min feasure of 0.000123 given by b2 = 9.797606 (for usual ref pulsar para but b1 = 8.773202)
+
+
+data1d.columns = ["b2","fmeasure"]
 
 print(data1d[data1d.fmeasure == data1d.fmeasure.min()])
 
 #PLOT 2: scatter plot
-plt.scatter(data1d.b1, data1d.fmeasure, linewidth=1)#cool,BrBg, twilight_shifted
-plt.xlabel('Cone 1 half opening beam angle')
+plt.scatter(data1d.b2, data1d.fmeasure, linewidth=1)#cool,BrBg, twilight_shifted
+plt.xlabel('Cone 2 half opening beam angle')
 plt.ylabel('Fit measure')
 plt.show()
 """"
