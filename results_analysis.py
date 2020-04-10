@@ -79,7 +79,7 @@ plt.show()
 """
 #Looking at the N=500 data shows that the fit measures for (p1,p2) = (1,0) and (0.4,0) are very similar
 #this is due to global_norm normalising the peak intensity value to 1 regardless of intensity.
-#so we need to analyse the ratio of p1/p2
+#so we need to analyse the ratio of p1/p2.
 
 """
 #PLOT 2: present as 2d with colourmap as fitmeasure
