@@ -90,13 +90,13 @@ chi = fit_measure(intensities_exp, intensities_ref)
 
 print( "Reference pulsar has a fit measure of " + str(chi))
 
-results.append(["intensity 1","half opening beam angle 1","beamlets half opening angle 1","eccentricity","orientation of semi major axis","intensity 2","half opening beam angle 2","beamlets half opening angle 2"])
+results.append(["intensity 1","half opening beam angle 1","beamlets half opening angle 1","eccentricity","orientation of semi major axis","intensity 2","half opening beam angle 2","beamlets half opening angle 2","fmeasure"])
 while c < 10001:
  # set arguments
  pulsar_number = str(c)
  c+=1
 
- pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
+
 
  a1 = rd.uniform(20, 600)  # 1
  b1 = rd.uniform(7, 11)  # 2
@@ -115,7 +115,7 @@ while c < 10001:
  pulsar_arg[7] = str(a2)
  pulsar_arg[8] = str(b2)
  pulsar_arg[9] = str(c2)
-
+ pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
 
  subprocess.check_output(pulsar_arg)
 
@@ -126,7 +126,7 @@ while c < 10001:
 
  print( "Pulsar "+ pulsar_number + " has a fit measure of " + str(chi))
 
- results.append([a1, b1, c1, E, osm, a2, b2, c2])
+ results.append([a1, b1, c1, E, osm, a2, b2, c2, chi])
 
  #clean up
  os.remove("SimPulse" + pulsar_number + ".gg")
