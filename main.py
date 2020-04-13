@@ -21,18 +21,6 @@ pulsar_arg=["./pulsar-getter.sh", "0.5", "8.773202", "1","15","0.85","45","0.5",
 pulsars_args = {}
 results = []
 
-param_dict = {
-  1 : list(np.arange(0.3, 0.8, 0.1)),  # intensity
-  2 : list(np.arange(10, 11.5, 0.5)),  # half opening angle of beam
-  3 : list(np.arange(0.5, 2, 0.5)),  # half opening angle of beamlets
-  4 : list(np.arange(14, 17, 1)),  # number of sparks
-  5 : list(np.arange(0.8, 0.95, 0.05)),  # eccentricity
-  6 : list(np.arange(40, 55, 5)),  # orientation of semi major axis
-  7 : list(np.arange(0.4, 0.7, 0.1)),  # intensity
-  8 : list(np.arange(7.5, 8.1, 0.2)),  # half opening angle of beam
-  9 : list(np.arange(0.5, 2, 0.5))  # half opening angle of beamlets
-}
-
 
 
 def read_pulsar(string): # Reads ASCII, returns dataframe  #"weak.all37.p3fold.ASCII" "W5testmodel.p3fold.ASCII"
@@ -104,7 +92,7 @@ chi = fit_measure(intensities_exp, intensities_ref)
 print( "Reference pulsar has a fit measure of " + str(chi))
 
 results.append(["intensity 1","half opening beam angle 1","beamlets half opening angle 1","eccentricity","orientation of semi major axis","intensity 2","half opening beam angle 2","beamlets half opening angle 2"])
-while c < 5001:
+while c < 10001:
  # set arguments
  pulsar_number = str(c)
  c+=1
@@ -115,7 +103,7 @@ while c < 5001:
  b1 = rd.uniform(7, 11)  # 2
  c1 = rd.uniform(1, 6)  # 3
  E = rd.uniform(0.5, 0.95)  # 5
- osm = rd.uniform(40, 55)  # 6
+ osm = rd.uniform(40, 60)  # 6
  a2 = rd.uniform(20, 600)  # 7
  b2 = rd.uniform(4, 11)  # 8
  c2 = rd.uniform(1, 6)  # 9
@@ -143,8 +131,7 @@ while c < 5001:
 
  #clean up
  os.remove("SimPulse" + pulsar_number + ".gg")
- os.remove("SimPulse"+pulsar_number+".gg.D.normalised")
- os.remove("SimPulse"+pulsar_number+".gg.final.ASCII")
+ os.remove("SimPulse"+pulsar_number+".gg.ASCII")
 
 
 np.savetxt('results_fullmonte.txt', results, delimiter=',')
