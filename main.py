@@ -79,13 +79,12 @@ intensities_exp = get_intensities(df_exp, 1)
 
 subprocess.check_output(pulsar_arg)
 
-df_ref = read_pulsar("refpulsar.gg.final.ASCII")
+df_ref = read_pulsar("refpulsar.gg.ASCII")
 intensities_ref = get_intensities(df_ref, 1)
 
 
 os.remove("refpulsar.gg")
-os.remove("refpulsar.gg.D.normalised")
-os.remove("refpulsar.gg.final.ASCII")
+os.remove("refpulsar.gg.ASCII")
 
 chi = fit_measure(intensities_exp, intensities_ref)
 
@@ -120,7 +119,7 @@ while c < 10001:
 
  subprocess.check_output(pulsar_arg)
 
- df_sim = read_pulsar("SimPulse"+pulsar_number+".gg.final.ASCII")
+ df_sim = read_pulsar("SimPulse"+pulsar_number+".gg.ASCII")
  intensities_sim = get_intensities(df_sim, 1)
 
  chi = fit_measure(intensities_exp, intensities_sim)
