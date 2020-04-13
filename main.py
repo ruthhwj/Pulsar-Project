@@ -33,6 +33,8 @@ param_dict = {
   9 : list(np.arange(0.5, 2, 0.5))  # half opening angle of beamlets
 }
 
+
+
 def read_pulsar(string): # Reads ASCII, returns dataframe  #"weak.all37.p3fold.ASCII" "W5testmodel.p3fold.ASCII"
   data = ascii.read(string, data_start=1)
   df = data.to_pandas()
@@ -101,17 +103,32 @@ chi = fit_measure(intensities_exp, intensities_ref)
 
 print( "Reference pulsar has a fit measure of " + str(chi))
 
-
-while c < 501:
+results.append(["intensity 1","half opening beam angle 1","beamlets half opening angle 1","eccentricity","orientation of semi major axis","intensity 2","half opening beam angle 2","beamlets half opening angle 2"])
+while c < 5001:
  # set arguments
  pulsar_number = str(c)
  c+=1
 
  pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
 
- b2 = rd.uniform(5,15)
+ a1 = rd.uniform(20, 600)  # 1
+ b1 = rd.uniform(7, 11)  # 2
+ c1 = rd.uniform(1, 6)  # 3
+ E = rd.uniform(0.5, 0.95)  # 5
+ osm = rd.uniform(40, 55)  # 6
+ a2 = rd.uniform(20, 600)  # 7
+ b2 = rd.uniform(4, 11)  # 8
+ c2 = rd.uniform(1, 6)  # 9
 
+ pulsar_arg[1] = str(a1)
+ pulsar_arg[2] = str(b1)
+ pulsar_arg[3] = str(c1)
+ pulsar_arg[5] = str(E)
+ pulsar_arg[6] = str(osm)
+ pulsar_arg[7] = str(a2)
  pulsar_arg[8] = str(b2)
+ pulsar_arg[9] = str(c2)
+
 
  subprocess.check_output(pulsar_arg)
 
@@ -121,9 +138,8 @@ while c < 501:
  chi = fit_measure(intensities_exp, intensities_sim)
 
  print( "Pulsar "+ pulsar_number + " has a fit measure of " + str(chi))
- print("b2 =" + str(b2))
 
- results.append([b2, chi])
+ results.append([a1, b1, c1, E, osm, a2, b2, c2])
 
  #clean up
  os.remove("SimPulse" + pulsar_number + ".gg")
@@ -131,4 +147,4 @@ while c < 501:
  os.remove("SimPulse"+pulsar_number+".gg.final.ASCII")
 
 
-np.savetxt('results_b2.txt', results, delimiter=',')
+np.savetxt('results_fullmonte.txt', results, delimiter=',')
