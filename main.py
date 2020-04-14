@@ -17,28 +17,17 @@ import glob, os
 
 #push comment
 pulsar_arg=["./pulsar-getter.sh", "0.5", "10.5", "1","15","0.85","45","0.5","7.7","1", "15", "20", "-2.4", "refpulsar.gg"]
-
+pulsar_arg_names = ["scriptname", "Cone1Intensity", "Cone1BeamAngle", "Cone1BeamletAngle","Cone1NumberOfSparks", "Eccentricity", "Orientation", "Cone2Intensity",
+                    "Cone2BeamAngle", "Cone2BeamletAngle","Cone2NumberOfSparks", "Alpha", "Beta", "Filename"]
+pulsar_arg_ranges = [[0.2, 1], [10, 11.5], [0.5, 2], [10, 15], [0, 0.99], [40, 55], [0.2, 1], [7.5,8.1], [0.5,2],[5,15],[0, 45],[0, -45]]
+# [cone1intensity, cone1beamangle, cone1beamletangle, cone1numberofsparks, eccentricity, orientation, cone2intensity, cone2beamangle, cone2beamletangle, cone2numberofsparks, alpha, beta
 pulsars_args = {}  # pulsar_number : pulsar_arg list
-results = []
 
-param_dict = {
-  1 : list(np.arange(0.3, 0.8, 0.1)),  # intensity
-  2 : list(np.arange(10, 11.5, 0.5)),  # half opening angle of beam
-  3 : list(np.arange(0.5, 2, 0.5)),  # half opening angle of beamlets
-  4 : list(np.arange(14, 17, 1)),  # number of sparks
-  5 : list(np.arange(0.8, 0.95, 0.05)),  # eccentricity
-  6 : list(np.arange(40, 55, 5)),  # orientation of semi major axis
-  7 : list(np.arange(0.4, 0.7, 0.1)),  # intensity
-  8 : list(np.arange(7.5, 8.1, 0.2)),  # half opening angle of beam
-  9 : list(np.arange(0.5, 2, 0.5))  # half opening angle of beamlets
-}
 
 def read_pulsar(string): # Reads ASCII, returns dataframe  #"weak.all37.p3fold.ASCII" "W5testmodel.p3fold.ASCII"
   data = ascii.read(string, data_start=1)
   df = data.to_pandas()
   return df
-
-
 
 def get_intensities(df, flag):  # Reads dataframe, returns 50x2246 array for plotting OR as a list
   intensities = np.array(df.col4)  # extract intensities column
@@ -50,74 +39,67 @@ def get_intensities(df, flag):  # Reads dataframe, returns 50x2246 array for plo
   if flag != 0:
     return croppedarray.flatten()  # want this for analysis
 
-
-
 def plot_pulsar(df_pixelarray):
   plt.imshow(df_pixelarray, 'twilight', origin='lower', interpolation='none', aspect='auto')
 
-
-
 def fit_measure(intensities_ref, intensities_img):
-
   chi = 0
-
   for i in range(len(intensities_ref)):
     x1 = (intensities_img[i] - intensities_ref[i])
     if intensities_img[i] != 0:
       chi += abs(x1 * x1 / intensities_ref[i])
       return (chi)
 
-
-""" 
-    #produce chi squared for all pixel intensities = 1
-    
-    chi_0 = 0
-    ones = np.ones(len(ref))
-    
-    for i in range(len(ref)):
-        x1 = (ones[i]-ref[i])
-        if img[i] != 0:
-        chi_0 += x1*x1/img[i]
- """
+def compare_pulsars(pulsar_number):
+    results = []
+    try:
+        df_sim = read_pulsar("SimPulse" + pulsar_number + ".gg.final.ASCII")
+    except:
+        raise
+    intensities_sim = get_intensities(df_sim, 1)
+    chi = fit_measure(intensities_exp, intensities_sim)
+    print("Pulsar " + pulsar_number + "has a fit measurement of " + str(chi))
+    results.append([b1,chi])
+    np.savetxt('results_{}.txt'.format(pulsar_arg_names[i]), results, delimiter=',')
+    os.remove("SimPulse" + pulsar_number + ".gg")
+    os.remove("SimPulse" + pulsar_number + ".gg.D.normalised")
+    os.remove("SimPulse" + pulsar_number + ".gg.final.ASCII")
 
 # Main code starts here
+def main():
+    df_exp = read_pulsar("norm_exp.ASCII")
+    intensities_exp = get_intensities(df_exp, 1)
+    for i in range(4,13):
+        c=1
+        while c <= 20:
+            try:
+                pulsar_number = str(c)
+                c+=1
+             #pulsar_arg[1] = str((param_dict[1][i]))
+                pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
+                b1 = np.random.uniform(pulsar_arg_ranges[i-1][0], pulsar_arg_ranges[i-1][1])
+                print(b1)
+                pulsar_arg[4] = str(14)
+                pulsar_arg[i] ='{0:.4f}'.format(float(str(b1)))
+                x = pulsar_arg[i]
+                print(pulsar_arg[i])
+                subprocess.check_output(pulsar_arg)
+                df_sim = read_pulsar("SimPulse" + pulsar_number + ".gg.final.ASCII")
+            except:
+                try:
+                    print("Exception Called, testing for limits error")
+                    pulsar_arg[i]=str(float(pulsar_arg[i])+0.0001)
+                    subprocess.check_output(pulsar_arg)
+                    df_sim = read_pulsar("SimPulse" + pulsar_number + ".gg.final.ASCII")
+                except:
+                    print("Type conversion error, rounding to nearest integer")
+                    pulsar_arg[i] = int(float(pulsar_arg[i]))
+                    x=pulsar_arg[i]
+                    subprocess.check_output(pulsar_arg[i])
+                    compare_pulsars(pulsar_number)
 
-c = 1
-
-df_exp = read_pulsar("norm_exp.ASCII")
-intensities_exp = get_intensities(df_exp, 1)
-
-
-#for i in range(len(param_dict[1]):
-while c < 500:
- # set arguments
- pulsar_number = str(c)
- c+=1
-
- #pulsar_arg[1] = str((param_dict[1][i]))
- pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
-
- b1 = rd.uniform(5,15)
-
-
- pulsar_arg[2] = str(b1)
-
- subprocess.check_output(pulsar_arg)
-
- df_sim = read_pulsar("SimPulse"+pulsar_number+".gg.final.ASCII")
- intensities_sim = get_intensities(df_sim, 1)
-
- chi = fit_measure(intensities_exp, intensities_sim)
-
- print( "Pulsar "+ pulsar_number + " has a chi squared of " + str(chi))
- print("b1 ="+str(b1) )
-
- results.append([b1, chi])
-
- #clean up
- os.remove("SimPulse" + pulsar_number + ".gg")
- os.remove("SimPulse"+pulsar_number+".gg.D.normalised")
- os.remove("SimPulse"+pulsar_number+".gg.final.ASCII")
+         # set arguments
 
 
-np.savetxt('results_b1.txt', results, delimiter=',')
+if __name__ == '__main__':
+    main()

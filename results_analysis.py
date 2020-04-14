@@ -24,7 +24,7 @@ def read_pulsar(string):  # Reads ASCII, returns dataframe  #"weak.all37.p3fold.
 
         #######scatter plots of the 1D Monte Carlo results
 
-data1d = pd.read_csv('results_b1.txt', sep=",", header=None)
+data1d = pd.read_csv('results_{}.txt'.format(pulsar_arg_names[i]), sep=",", header=None)
 
 # 08/04/20 results_b1 is the N=500 monte carlo simulation
 # the half opening angle of the first cone was randomly generated between 5 and 5 degrees
@@ -33,7 +33,7 @@ data1d.columns = ["b1","fmeasure"]
 
 #PLOT 2: scatter plot
 plt.scatter(data1d.b1, data1d.fmeasure, linewidth=1)#cool,BrBg, twilight_shifted
-plt.xlabel('Cone 1 half opening beam angle')
+plt.xlabel('Cone Eccentricity')
 plt.ylabel('Fit measure')
 plt.show()
 
