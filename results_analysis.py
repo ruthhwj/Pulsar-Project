@@ -30,22 +30,27 @@ def read_pulsar(string):  # Reads ASCII, returns dataframe  #"weak.all37.p3fold.
 # the half opening angle of the first cone was randomly generated between 5 and 15 degrees
 # min fmeasure given by b1 = 8.773202
 
-data1d = pd.read_csv('results_b2.txt', sep=",", header=None)
+#data1d = pd.read_csv('results_b2.txt', sep=",", header=None)
 
 # 09/04/20 results_b2 is the N=500 monte carlo simulation
 # the half opening angle of the second cone was randomly generated between 5 and 15 degrees
 # min feasure of 0.000123 given by b2 = 9.797606 (for usual ref pulsar para but b1 = 8.773202)
 
 
-data1d.columns = ["b2","fmeasure"]
+data4d = pd.read_csv('results_normdisable_a1a2b1b2.txt', sep=",", header=None)
 
-print(data1d[data1d.fmeasure == data1d.fmeasure.min()])
+# 14/04/20 results of N=1000 monte carlo simulation with -normdisable
+#
+
+data4d.columns = ["a1", "a2", "b1", "b2", "fmeasure"]
+
+print(data4d.nsmallest(10, 'fmeasure')) #print parameters which give the minimum fmeasures
 
 #PLOT 2: scatter plot
-plt.scatter(data1d.b2, data1d.fmeasure, linewidth=1)#cool,BrBg, twilight_shifted
-plt.xlabel('Cone 2 half opening beam angle')
-plt.ylabel('Fit measure')
-plt.show()
+#plt.scatter(data1d.b2, data1d.fmeasure, linewidth=1)#cool,BrBg, twilight_shifted
+#plt.xlabel('Cone 2 half opening beam angle')
+#plt.ylabel('Fit measure')
+#plt.show()
 """"
         #######scatter plots of the 2D Monte Carlo results
 

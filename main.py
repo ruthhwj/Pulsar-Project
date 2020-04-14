@@ -97,8 +97,6 @@ while c < 1001:
  pulsar_number = str(c)
  c+=1
 
-
-
  a1 = rd.uniform(50, 200)  # 1   2e2
  b1 = rd.uniform(7, 11)  # 2
  #c1 = rd.uniform(1, 6)  # 3
