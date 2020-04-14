@@ -90,8 +90,9 @@ chi = fit_measure(intensities_exp, intensities_ref)
 
 print( "Reference pulsar has a fit measure of " + str(chi))
 
-results.append(["intensity 1","half opening beam angle 1","beamlets half opening angle 1","eccentricity","orientation of semi major axis","intensity 2","half opening beam angle 2","beamlets half opening angle 2","fmeasure"])
-while c < 10001:
+#results.append(["intensity 1","half opening beam angle 1","beamlets half opening angle 1","eccentricity","orientation of semi major axis","intensity 2","half opening beam angle 2","beamlets half opening angle 2","fmeasure"])
+
+while c < 501:
  # set arguments
  pulsar_number = str(c)
  c+=1
@@ -99,22 +100,22 @@ while c < 10001:
 
 
  a1 = rd.uniform(20, 600)  # 1
- b1 = rd.uniform(7, 11)  # 2
- c1 = rd.uniform(1, 6)  # 3
- E = rd.uniform(0.5, 0.95)  # 5
- osm = rd.uniform(40, 60)  # 6
+ #b1 = rd.uniform(7, 11)  # 2
+ #c1 = rd.uniform(1, 6)  # 3
+ #E = rd.uniform(0.5, 0.95)  # 5
+ #osm = rd.uniform(40, 60)  # 6
  a2 = rd.uniform(20, 600)  # 7
- b2 = rd.uniform(4, 11)  # 8
- c2 = rd.uniform(1, 6)  # 9
+ #b2 = rd.uniform(4, 11)  # 8
+ #c2 = rd.uniform(1, 6)  # 9
 
  pulsar_arg[1] = str(a1)
- pulsar_arg[2] = str(b1)
- pulsar_arg[3] = str(c1)
- pulsar_arg[5] = str(E)
- pulsar_arg[6] = str(osm)
+ #pulsar_arg[2] = str(b1)
+ #pulsar_arg[3] = str(c1)
+ #pulsar_arg[5] = str(E)
+ #pulsar_arg[6] = str(osm)
  pulsar_arg[7] = str(a2)
- pulsar_arg[8] = str(b2)
- pulsar_arg[9] = str(c2)
+ #pulsar_arg[8] = str(b2)
+ #pulsar_arg[9] = str(c2)
  pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
 
  subprocess.check_output(pulsar_arg)
@@ -125,12 +126,13 @@ while c < 10001:
  chi = fit_measure(intensities_exp, intensities_sim)
 
  print( "Pulsar "+ pulsar_number + " has a fit measure of " + str(chi))
+ print("(a1,a2) = ("+str(a1)+", "+str(a2)+")")
 
- results.append([a1, b1, c1, E, osm, a2, b2, c2, chi])
+ results.append([a1, a2, chi])
 
  #clean up
  os.remove("SimPulse" + pulsar_number + ".gg")
  os.remove("SimPulse"+pulsar_number+".gg.ASCII")
 
 
-np.savetxt('results_fullmonte.txt', results, delimiter=',')
+np.savetxt('results_normdisable_a1a2.txt', results, delimiter=',')
