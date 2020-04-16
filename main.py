@@ -52,11 +52,10 @@ def fit_measure(intensities_ref, intensities_img):
   chi = 0
 
   for i in range(len(intensities_ref)):
-    x1 = (intensities_img[i] - intensities_ref[i]) #x1*x1/rms noise*DoF
-    if intensities_img[i] != 0:
-      chi += abs(x1*x1/intensities_img[i])
-      return (chi)
+    x1 = (intensities_img[i] - intensities_ref[i])
+    chi += abs(x1*x1)
 
+  return (chi/(np.var(intensities_img)*(50*600-2)))  #x1*x1/DoF
 
 """ 
     #produce chi squared for all pixel intensities = 1
@@ -76,7 +75,7 @@ c = 1
 
 df_exp = read_pulsar("weak.all37.p3fold.ASCII")
 intensities_exp = get_intensities(df_exp, 1)
-
+print("sum of exp intensities = " + str(sum(intensities_exp)))
 subprocess.check_output(pulsar_arg)
 
 df_ref = read_pulsar("refpulsar.gg.ASCII")
@@ -97,12 +96,12 @@ while c < 501:
  pulsar_number = str(c)
  c+=1
 
- a1 = rd.uniform(50, 200)  # 1   2e2
+ a1 = rd.uniform(20, 300)  # 1   2e2
  #b1 = rd.uniform(7, 11)  # 2
  #c1 = rd.uniform(1, 6)  # 3
  #E = rd.uniform(0.5, 0.95)  # 5
  #osm = rd.uniform(40, 60)  # 6
- a2 = rd.uniform(50, 200)  # 7     1e2
+ a2 = rd.uniform(20, 300)  # 7     1e2
  #b2 = rd.uniform(4, 11)  # 8
  #c2 = rd.uniform(1, 6)  # 9
 
@@ -134,4 +133,4 @@ while c < 501:
  os.remove("SimPulse"+pulsar_number+".gg.ASCII")
 
 
-np.savetxt('results_normdisable_a1a2.txt', results, delimiter=',')
+np.savetxt('results_a1a2.txt', results, delimiter=',')
