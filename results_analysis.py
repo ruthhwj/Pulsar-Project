@@ -24,33 +24,21 @@ def read_pulsar(string):  # Reads ASCII, returns dataframe  #"weak.all37.p3fold.
 
         #######scatter plots of the 1D Monte Carlo results
 
-#data1d = pd.read_csv('results_b1.txt', sep=",", header=None)
 
-# 08/04/20 results_b1 is the N=500 monte carlo simulation
-# the half opening angle of the first cone was randomly generated between 5 and 15 degrees
-# min fmeasure given by b1 = 8.773202
+data2d = pd.read_csv('results_a1a2.txt', sep=",", header=None)
 
-#data1d = pd.read_csv('results_b2.txt', sep=",", header=None)
-
-# 09/04/20 results_b2 is the N=500 monte carlo simulation
-# the half opening angle of the second cone was randomly generated between 5 and 15 degrees
-# min feasure of 0.000123 given by b2 = 9.797606 (for usual ref pulsar para but b1 = 8.773202)
-
-
-data4d = pd.read_csv('results_normdisable_a1a2b1b2.txt', sep=",", header=None)
-
-# 14/04/20 results of N=1000 monte carlo simulation with -normdisable
+# 16/04/20 results of N=500 monte carlo simulation for cone intensities
 #
 
-data4d.columns = ["a1", "a2", "b1", "b2", "fmeasure"]
+data2d.columns = ["a1", "a2", "fmeasure"]
 
-print(data4d.nsmallest(10, 'fmeasure')) #print parameters which give the minimum fmeasures
-
+print(data2d.nsmallest(10, 'fmeasure')) #print parameters which give the minimum fmeasures
+print(data2d.nlargest(10, 'fmeasure'))
 #PLOT 2: scatter plot
-#plt.scatter(data1d.b2, data1d.fmeasure, linewidth=1)#cool,BrBg, twilight_shifted
-#plt.xlabel('Cone 2 half opening beam angle')
-#plt.ylabel('Fit measure')
-#plt.show()
+plt.scatter(data2d.a1, data2d.fmeasure, linewidth=1)#cool,BrBg, twilight_shifted
+plt.xlabel('Cone 1 Intensity')
+plt.ylabel('Reduced Chi Squared')
+plt.show()
 """"
         #######scatter plots of the 2D Monte Carlo results
 
@@ -75,36 +63,37 @@ data.columns = ["p1", "p2", "fmeasure"] #cone 1 intensity, cone 2 intensity, fit
 
 #PLOT 1: 3d scatter plot
 dplot = plt.figure().gca(projection='3d')
-dplot.scatter(data.p1, data.p2, data.fmeasure,  c=data.fmeasure, cmap='BrBG', linewidth=1 )
-dplot.set_xlabel('Cone 1 half opening angle')
-dplot.set_ylabel('Cone 2 half opening angle')
-dplot.set_zlabel('Fit measure')
+dplot.scatter(data2d.a1, data2d.a2, data2d.fmeasure,  c=data2d.fmeasure, cmap='BrBG', linewidth=1 )
+dplot.set_xlabel('Cone 1 Intensity')
+dplot.set_ylabel('Cone 2 Intensity')
+dplot.set_zlabel('Reduced Chi Squared')
 plt.show()
-
 """
+
 #Looking at the N=500 data shows that the fit measures for (p1,p2) = (1,0) and (0.4,0) are very similar
 #this is due to global_norm normalising the peak intensity value to 1 regardless of intensity.
 #so we need to analyse the ratio of p1/p2.
 
-"""
-#PLOT 2: present as 2d with colourmap as fitmeasure
-plt.scatter(data.p1, data.p2, c=data.fmeasure, cmap='BrBG', linewidth=1)#cool,BrBg, twilight_shifted
-plt.xlabel('Cone 1 half opening angle')
-plt.ylabel('Cone 2 half opening angle')
-cbar = plt.colorbar()
-cbar.set_label('Fit measure')
 
+#PLOT 2: present as 2d with colourmap as fitmeasure
+plt.scatter(data2d.a1, data2d.a2, c=data2d.fmeasure, cmap='BrBG', linewidth=1)#cool,BrBg, twilight_shifted
+plt.xlabel('Cone 1 Intensity')
+plt.ylabel('Cone 2 Intensity')
+cbar = plt.colorbar()
+cbar.set_label('Reduced Chi Squared')
 plt.show()
+"""
+
 #PLOT 3: make it a 3d surface
 ax = plt.axes(projection='3d')
 ax.plot_trisurf(data.p1, data.p2, data.fmeasure, cmap='cool') #the sickest plot you've ever seen
 plt.show()
-
+"""
       #Histograms of the pixel intensity ranges
+"""
+df_exp = read_pulsar("weak.all37.p3fold.ASCII")
+df_model = read_pulsar("test.gg.ASCII")
 
-df_exp = read_pulsar("weak.all37.p3fold.ASCII.normalised.ASCII")
-df_model_D = read_pulsar("testmodel.gg.D.p3fold.ASCII")
-df_model = read_pulsar("testmodel.noise.normalised.ASCII")
 
 print("max intensity of model is " + str(max(df_model.col4)))
 print("min intensity of model is " + str(min(df_model.col4)))
@@ -112,13 +101,14 @@ print("max intensity of exp is " + str(max(df_exp.col4)))
 print("min intensity of exp is " + str(min(df_exp.col4)))
 
 
-#A = [(df_model.col4), (df_exp.col4), (df_model_D.col4)]
+A = [(df_exp.col4),(df_model.col4)]
 
-#plt.boxplot(A)
+plt.boxplot(A)
 
 #without outliers
-plt.boxplot(df_model.col4, sym='')
-plt.boxplot(df_exp.col4, sym='')
+plt.boxplot(df_exp.col4)
+plt.xlabel("PSR B1839-04 P3fold intensities")
 
 plt.show()
+
 """
