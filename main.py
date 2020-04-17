@@ -16,7 +16,7 @@ import glob, os
 
 
 #push comment
-pulsar_arg=["./pulsar-getter.sh", "233.940149", "10.5", "1","15","0.8","45","60.108976","6.917815","0.85", "15", "20", "-2.4", "refpulsar.gg"]
+pulsar_arg=["./pulsar-getter.sh", "233.940149", "10.621519", "1","15","0.8", "45", "60.108976","6.917815","0.85", "15", "20", "-2.4", "refpulsar.gg"]
 
 results = []
 
@@ -85,21 +85,21 @@ while c < 101:
  c+=1
 
  #a1 = rd.uniform(220, 250)  # 1
- b1 = rd.uniform(10,11.5)  # 2 10.5
+ #b1 = rd.uniform(10,11.5)  # 2 10.5
  #c1 = rd.uniform(1, 6)  # 3
  #E = rd.uniform(0.5, 0.95)  # 5
  #osm = rd.uniform(40, 60)  # 6
  #a2 = rd.uniform(50, 80)  # 7
- #b2 = rd.uniform(6, 8)  # 8 7.7
+ b2 = rd.uniform(6, 8)  # 8 7.7
  #c2 = rd.uniform(1, 6)  # 9
 
  #pulsar_arg[1] = str(a1)
- pulsar_arg[2] = str(b1)
+ #pulsar_arg[2] = str(b1)
  #pulsar_arg[3] = str(c1)
  #pulsar_arg[5] = str(E)
  #pulsar_arg[6] = str(osm)
  #pulsar_arg[7] = str(a2)
- #pulsar_arg[8] = str(b2)
+ pulsar_arg[8] = str(b2)
  #pulsar_arg[9] = str(c2)
  pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
 
@@ -109,23 +109,23 @@ while c < 101:
  intensities_sim = get_intensities(df_sim, 1)
 
  chi = fit_measure(intensities_exp, intensities_sim)
- results.append([b1, chi])
+ results.append([b2, chi])
 
 
  print( "Pulsar "+ pulsar_number + " has a fit measure of " + str(chi))
  #print("(b1,b2) = ("+str(b1)+", "+str(b2)+")")
- print("b1 = "+ str(b1))
+ print("b2 = "+ str(b2))
 
 
  if chi < min_chi:
    min_chi = chi
-   min_b1 = b1
-   #min_b2 = b2
+   #min_b1 = b1
+   min_b2 = b2
 
 
  print("current minimum reduced chi squared = " + str(min_chi))
  #print("for (b1,b2) = (" + str(min_b1) + ", " + str(min_b2) + ")")
- print("for b1 = "+str(min_b1))
+ print("for b2 = "+str(min_b2))
 
 
 
@@ -134,4 +134,4 @@ while c < 101:
  os.remove("SimPulse"+pulsar_number+".gg.ASCII")
 
 
-np.savetxt('results_b1b2_b1refine.txt', results, delimiter=',')
+np.savetxt('results_b1b2_b2refine.txt', results, delimiter=',')

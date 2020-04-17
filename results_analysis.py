@@ -49,7 +49,7 @@ data2d = pd.read_csv('results_b1b2.txt', sep=",", header=None)
 
 # 16/04/20 results of N=500 monte carlo simulation for cone intensities
 #
-
+""""
 data2d.columns = ["b1", "b2", "fmeasure"]
 
 print(data2d.nsmallest(10, 'fmeasure')) #print parameters which give the minimum fmeasures
@@ -60,7 +60,7 @@ plt.xlabel('Cone 2 Half Opening Beam Angle')
 plt.ylabel('Reduced Chi Squared')
 plt.show()
 
-""""
+
 
 
         #######scatter plots of the 2D Monte Carlo results
@@ -149,11 +149,14 @@ p1 = get_intensities(p1_0,0)
 p2 = get_intensities(p2_0,0)
 exp = get_intensities(df_exp,0)
 
-dif_1 = (exp - p1)
-dif_2 = (exp - p2)
+dif_1 = abs(exp - p1)
+dif_2 = abs(exp - p2)
 
 
-plt.imshow(dif_1, cmap='afmhot', aspect='auto',extent=[1400,2000,0,50])
-plt.subplot(1, 2, 2)
-plt.imshow(dif_2,cmap='afmhot', aspect='auto',extent=[1400,2000,0,50])
+plt.imshow(dif_1, cmap='afmhot', aspect='auto', extent=[1400,2000,0,50])
 plt.colorbar()
+plt.show()
+
+plt.imshow(dif_2, cmap='afmhot', aspect='auto', extent=[1400,2000,0,50])
+plt.colorbar()
+plt.show()
