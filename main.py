@@ -16,7 +16,7 @@ import glob, os
 
 
 #push comment
-pulsar_arg=["./pulsar-getter.sh", "233.940149", "10.5", "1","15","0.8","45","69.563323","7.7","0.85", "15", "20", "-2.4", "refpulsar.gg"]
+pulsar_arg=["./pulsar-getter.sh", "233.940149", "10.5", "1","15","0.8","45","60.108976","7.7","0.85", "15", "20", "-2.4", "refpulsar.gg"]
 
 results = []
 
@@ -76,27 +76,27 @@ chi = fit_measure(intensities_exp, intensities_ref)
 print( "Reference pulsar has a fit measure of " + str(chi))
 
 
-while c < 101:
+while c < 501:
  # set arguments
  pulsar_number = str(c)
  c+=1
 
  #a1 = rd.uniform(220, 250)  # 1
- #b1 = rd.uniform(7, 11)  # 2
+ b1 = rd.uniform(7, 13)  # 2 10.5
  #c1 = rd.uniform(1, 6)  # 3
  #E = rd.uniform(0.5, 0.95)  # 5
  #osm = rd.uniform(40, 60)  # 6
- a2 = rd.uniform(50, 80)  # 7
- #b2 = rd.uniform(4, 11)  # 8
+ #a2 = rd.uniform(50, 80)  # 7
+ b2 = rd.uniform(4, 11)  # 8 7.7
  #c2 = rd.uniform(1, 6)  # 9
 
  #pulsar_arg[1] = str(a1)
- #pulsar_arg[2] = str(b1)
+ pulsar_arg[2] = str(b1)
  #pulsar_arg[3] = str(c1)
  #pulsar_arg[5] = str(E)
  #pulsar_arg[6] = str(osm)
- pulsar_arg[7] = str(a2)
- #pulsar_arg[8] = str(b2)
+ #pulsar_arg[7] = str(a2)
+ pulsar_arg[8] = str(b2)
  #pulsar_arg[9] = str(c2)
  pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
 
@@ -108,14 +108,14 @@ while c < 101:
  chi = fit_measure(intensities_exp, intensities_sim)
 
  print( "Pulsar "+ pulsar_number + " has a fit measure of " + str(chi))
- #print("(a1,a2) = ("+str(a1)+", "+str(a2)+")")
- print("a2 = "+ str(a2))
+ print("(b1,b2) = ("+str(b1)+", "+str(b2)+")")
+ #print("a2 = "+ str(a2))
 
- results.append([a2, chi])
+ results.append([b1, b2 , chi])
 
  #clean up
  os.remove("SimPulse" + pulsar_number + ".gg")
  os.remove("SimPulse"+pulsar_number+".gg.ASCII")
 
 
-np.savetxt('results_a1a2_refinea2.txt', results, delimiter=',')
+np.savetxt('results_b1b2.txt', results, delimiter=',')

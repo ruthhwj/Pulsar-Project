@@ -34,18 +34,18 @@ def get_intensities(df, flag):  # Reads dataframe, returns 50x2246 array for plo
         #######scatter plots of the 1D Monte Carlo results
 
 
-data2d = pd.read_csv('results_a1a2_refinea1.txt', sep=",", header=None)
+data2d = pd.read_csv('results_a1a2_refinea2.txt', sep=",", header=None)
 
 # 16/04/20 results of N=500 monte carlo simulation for cone intensities
 #
 
-data2d.columns = ["a1", "fmeasure"]
+data2d.columns = ["a2", "fmeasure"]
 
 print(data2d.nsmallest(10, 'fmeasure')) #print parameters which give the minimum fmeasures
 print(data2d.nlargest(10, 'fmeasure'))
 #PLOT 2: scatter plot
-plt.scatter(data2d.a1, data2d.fmeasure, linewidth=1)#cool,BrBg, twilight_shifted
-plt.xlabel('Cone 1 Intensity')
+plt.scatter(data2d.a2, data2d.fmeasure, linewidth=1)#cool,BrBg, twilight_shifted
+plt.xlabel('Cone 2 Intensity')
 plt.ylabel('Reduced Chi Squared')
 plt.show()
 
