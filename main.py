@@ -16,7 +16,7 @@ import glob, os
 
 
 #push comment
-pulsar_arg=["./pulsar-getter.sh", "227.7", "10.5", "1","15","0.8","45","69.95","7.7","1", "15", "20", "-2.4", "refpulsar.gg"]
+pulsar_arg=["./pulsar-getter.sh", "227.7", "10.5", "1","15","0.8","45","69.95","7.7","0.85", "15", "20", "-2.4", "refpulsar.gg"]
 
 pulsars_args = {}
 results = []
@@ -93,12 +93,12 @@ while c < 501:
  pulsar_number = str(c)
  c+=1
 
- a1 = rd.uniform(200, 20000)  # 1
+ a1 = rd.uniform(10, 600)  # 1
  #b1 = rd.uniform(7, 11)  # 2
  #c1 = rd.uniform(1, 6)  # 3
  #E = rd.uniform(0.5, 0.95)  # 5
  #osm = rd.uniform(40, 60)  # 6
- a2 = rd.uniform(200, 20000)  # 7
+ a2 = rd.uniform(10, 600)  # 7
  #b2 = rd.uniform(4, 11)  # 8
  #c2 = rd.uniform(1, 6)  # 9
 
@@ -130,4 +130,4 @@ while c < 501:
  os.remove("SimPulse"+pulsar_number+".gg.ASCII")
 
 
-np.savetxt('results_a1a2_2.txt', results, delimiter=',')
+np.savetxt('results_a1a2_3.txt', results, delimiter=',')

@@ -19,8 +19,17 @@ def read_pulsar(string):  # Reads ASCII, returns dataframe  #"weak.all37.p3fold.
   df = data.to_pandas()
   return df
 
+def get_intensities(df, flag):  # Reads dataframe, returns 50x2246 array for plotting OR as a list
+  intensities = np.array(df.col4)  # extract intensities column
+  pixelarray = np.array(intensities).reshape(50, 2246)  # shape into array with dimensions of image
+  croppedarray = pixelarray[:, 1400:2000]  # rough onpulse region of exp data
 
-        #main code
+  if flag == 0:
+    return croppedarray  # want this for plotting
+  if flag != 0:
+    return croppedarray.flatten()  # want this for analysis
+
+      #main code
 
         #######scatter plots of the 1D Monte Carlo results
 
@@ -35,10 +44,13 @@ data2d.columns = ["a1", "a2", "fmeasure"]
 print(data2d.nsmallest(10, 'fmeasure')) #print parameters which give the minimum fmeasures
 print(data2d.nlargest(10, 'fmeasure'))
 #PLOT 2: scatter plot
-plt.scatter(data2d.a1, data2d.fmeasure, linewidth=1)#cool,BrBg, twilight_shifted
-plt.xlabel('Cone 1 Intensity')
+plt.scatter(data2d.a1/data2d.a2, data2d.fmeasure, linewidth=1)#cool,BrBg, twilight_shifted
+plt.xlabel('Intensity 1 / Intensity 2')
 plt.ylabel('Reduced Chi Squared')
 plt.show()
+
+
+
 """"
         #######scatter plots of the 2D Monte Carlo results
 
@@ -74,7 +86,7 @@ plt.show()
 #this is due to global_norm normalising the peak intensity value to 1 regardless of intensity.
 #so we need to analyse the ratio of p1/p2.
 
-
+"""
 #PLOT 2: present as 2d with colourmap as fitmeasure
 plt.scatter(data2d.a1, data2d.a2, c=data2d.fmeasure, cmap='BrBG', linewidth=1)#cool,BrBg, twilight_shifted
 plt.xlabel('Cone 1 Intensity')
@@ -82,7 +94,7 @@ plt.ylabel('Cone 2 Intensity')
 cbar = plt.colorbar()
 cbar.set_label('Reduced Chi Squared')
 plt.show()
-"""
+
 
 #PLOT 3: make it a 3d surface
 ax = plt.axes(projection='3d')
@@ -90,25 +102,29 @@ ax.plot_trisurf(data.p1, data.p2, data.fmeasure, cmap='cool') #the sickest plot 
 plt.show()
 """
       #Histograms of the pixel intensity ranges
-"""
+""""""
 df_exp = read_pulsar("weak.all37.p3fold.ASCII")
-df_model = read_pulsar("test.gg.ASCII")
+df_model = read_pulsar("refpulsar.gg.ASCII")
+
+exp = get_intensities(df_exp, 1)
+model = get_intensities(df_model, 1)
+
+print("max intensity of model is " + str(max(model)))
+print("min intensity of model is " + str(min(model)))
+print("max intensity of exp is " + str(max(exp)))
+print("min intensity of exp is " + str(min(exp)))
 
 
-print("max intensity of model is " + str(max(df_model.col4)))
-print("min intensity of model is " + str(min(df_model.col4)))
-print("max intensity of exp is " + str(max(df_exp.col4)))
-print("min intensity of exp is " + str(min(df_exp.col4)))
+A = [(exp),(model)]
 
-
-A = [(df_exp.col4),(df_model.col4)]
-
-plt.boxplot(A)
-
-#without outliers
-plt.boxplot(df_exp.col4)
-plt.xlabel("PSR B1839-04 P3fold intensities")
-
+plt.boxplot(A, labels=["Experimental Intensities", "Model Intensities"], sym="")
 plt.show()
 
-"""
+#without outliers
+#plt.boxplot(df_exp.col4)
+
+
+df = pd.DataFrame([exp, model], columns=["Experimental Intensities", "Model Intensities"])
+boxplot = df.boxplot(column=["Experimental Intensities", "Model Intensities"], sym="")
+print("here")
+boxplot.show()
