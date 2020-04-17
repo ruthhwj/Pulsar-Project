@@ -29,29 +29,40 @@ def get_intensities(df, flag):  # Reads dataframe, returns 50x2246 array for plo
   if flag != 0:
     return croppedarray.flatten()  # want this for analysis
 
+def plot_pulsar(df_pixelarray, title):
+ print("Plotting pulsar...")
+ plt.imshow(df_pixelarray, 'afmhot', origin='lower', interpolation='none', aspect='auto',extent=[1400,2000,0,50])
+ plt.set_title(title)
+ plt.colorbar()
+ plt.show()
+
       #main code
 
         #######scatter plots of the 1D Monte Carlo results
 
 
-data2d = pd.read_csv('results_a1a2_refinea2.txt', sep=",", header=None)
+
+
+
+
+data2d = pd.read_csv('results_b1b2.txt', sep=",", header=None)
 
 # 16/04/20 results of N=500 monte carlo simulation for cone intensities
 #
 
-data2d.columns = ["a2", "fmeasure"]
+data2d.columns = ["b1", "b2", "fmeasure"]
 
 print(data2d.nsmallest(10, 'fmeasure')) #print parameters which give the minimum fmeasures
 print(data2d.nlargest(10, 'fmeasure'))
 #PLOT 2: scatter plot
-plt.scatter(data2d.a2, data2d.fmeasure, linewidth=1)#cool,BrBg, twilight_shifted
-plt.xlabel('Cone 2 Intensity')
+plt.scatter(data2d.b2, data2d.fmeasure, linewidth=1)#cool,BrBg, twilight_shifted
+plt.xlabel('Cone 2 Half Opening Beam Angle')
 plt.ylabel('Reduced Chi Squared')
 plt.show()
 
-
-
 """"
+
+
         #######scatter plots of the 2D Monte Carlo results
 
 #data = pd.read_csv('results_p1p2.txt', sep=",", header=None)
@@ -85,12 +96,12 @@ plt.show()
 #Looking at the N=500 data shows that the fit measures for (p1,p2) = (1,0) and (0.4,0) are very similar
 #this is due to global_norm normalising the peak intensity value to 1 regardless of intensity.
 #so we need to analyse the ratio of p1/p2.
-
 """
+
 #PLOT 2: present as 2d with colourmap as fitmeasure
-plt.scatter(data2d.a1, data2d.a2, c=data2d.fmeasure, cmap='BrBG', linewidth=1)#cool,BrBg, twilight_shifted
-plt.xlabel('Cone 1 Intensity')
-plt.ylabel('Cone 2 Intensity')
+plt.scatter(data2d.b1, data2d.b2, c=data2d.fmeasure, cmap='BrBG', linewidth=1)#cool,BrBg, twilight_shifted
+plt.xlabel('Cone 1 Half Opening Beam Angle')
+plt.ylabel('Cone 2 Half Opening Beam Angle')
 cbar = plt.colorbar()
 cbar.set_label('Reduced Chi Squared')
 plt.show()
@@ -102,10 +113,10 @@ ax.plot_trisurf(data.p1, data.p2, data.fmeasure, cmap='cool') #the sickest plot 
 plt.show()
 """
       #Histograms of the pixel intensity ranges
-"""
+
 df_exp = read_pulsar("weak.all37.p3fold.ASCII")
 df_model = read_pulsar("refpulsar.gg.ASCII")
-
+"""
 exp = get_intensities(df_exp, 1)
 model = get_intensities(df_model, 1)
 
@@ -128,3 +139,21 @@ df = pd.DataFrame([exp, model], columns=["Experimental Intensities", "Model Inte
 boxplot = df.boxplot(column=["Experimental Intensities", "Model Intensities"], sym="")
 print("here")
 boxplot.show()"""
+
+
+
+p1_0 = read_pulsar("a1a2_3_pulsar.ASCII")
+p2_0 = read_pulsar("b1b2_pulsar.ASCII")
+
+p1 = get_intensities(p1_0,0)
+p2 = get_intensities(p2_0,0)
+exp = get_intensities(df_exp,0)
+
+dif_1 = (exp - p1)
+dif_2 = (exp - p2)
+
+
+plt.imshow(dif_1, cmap='afmhot', aspect='auto',extent=[1400,2000,0,50])
+plt.subplot(1, 2, 2)
+plt.imshow(dif_2,cmap='afmhot', aspect='auto',extent=[1400,2000,0,50])
+plt.colorbar()
