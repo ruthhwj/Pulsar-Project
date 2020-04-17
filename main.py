@@ -16,9 +16,8 @@ import glob, os
 
 
 #push comment
-pulsar_arg=["./pulsar-getter.sh", "227.7", "10.5", "1","15","0.8","45","69.95","7.7","0.85", "15", "20", "-2.4", "refpulsar.gg"]
+pulsar_arg=["./pulsar-getter.sh", "237.750136", "10.5", "1","15","0.8","45","69.563323","7.7","0.85", "15", "20", "-2.4", "refpulsar.gg"]
 
-pulsars_args = {}
 results = []
 
 
@@ -57,17 +56,7 @@ def fit_measure(intensities_ref, intensities_img):
 
   return (chi/(np.var(intensities_img)*(50*600-2)))  #x1*x1/DoF
 
-""" 
-    #produce chi squared for all pixel intensities = 1
-    
-    chi_0 = 0
-    ones = np.ones(len(ref))
-    
-    for i in range(len(ref)):
-        x1 = (ones[i]-ref[i])
-        if img[i] != 0:
-        chi_0 += x1*x1/img[i]
- """
+
 
 # Main code starts here
 
@@ -75,7 +64,7 @@ c = 1
 
 df_exp = read_pulsar("weak.all37.p3fold.ASCII")
 intensities_exp = get_intensities(df_exp, 1)
-print("sum of exp intensities = " + str(sum(intensities_exp)))
+
 subprocess.check_output(pulsar_arg)
 
 df_ref = read_pulsar("refpulsar.gg.ASCII")
@@ -86,19 +75,18 @@ chi = fit_measure(intensities_exp, intensities_ref)
 
 print( "Reference pulsar has a fit measure of " + str(chi))
 
-#results.append(["intensity 1","half opening beam angle 1","beamlets half opening angle 1","eccentricity","orientation of semi major axis","intensity 2","half opening beam angle 2","beamlets half opening angle 2","fmeasure"])
 
-while c < 501:
+while c < 101:
  # set arguments
  pulsar_number = str(c)
  c+=1
 
- a1 = rd.uniform(10, 600)  # 1
+ a1 = rd.uniform(220, 250)  # 1
  #b1 = rd.uniform(7, 11)  # 2
  #c1 = rd.uniform(1, 6)  # 3
  #E = rd.uniform(0.5, 0.95)  # 5
  #osm = rd.uniform(40, 60)  # 6
- a2 = rd.uniform(10, 600)  # 7
+ #a2 = rd.uniform(10, 600)  # 7
  #b2 = rd.uniform(4, 11)  # 8
  #c2 = rd.uniform(1, 6)  # 9
 
@@ -107,7 +95,7 @@ while c < 501:
  #pulsar_arg[3] = str(c1)
  #pulsar_arg[5] = str(E)
  #pulsar_arg[6] = str(osm)
- pulsar_arg[7] = str(a2)
+ #pulsar_arg[7] = str(a2)
  #pulsar_arg[8] = str(b2)
  #pulsar_arg[9] = str(c2)
  pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
@@ -120,14 +108,14 @@ while c < 501:
  chi = fit_measure(intensities_exp, intensities_sim)
 
  print( "Pulsar "+ pulsar_number + " has a fit measure of " + str(chi))
- print("(a1,a2) = ("+str(a1)+", "+str(a2)+")")
+ #print("(a1,a2) = ("+str(a1)+", "+str(a2)+")")
+ print("a1 = "+ str(a1))
 
-
- results.append([a1, a2, chi])
+ results.append([a1, chi])
 
  #clean up
  os.remove("SimPulse" + pulsar_number + ".gg")
  os.remove("SimPulse"+pulsar_number+".gg.ASCII")
 
 
-np.savetxt('results_a1a2_3.txt', results, delimiter=',')
+np.savetxt('results_a1a2_refinea1.txt', results, delimiter=',')

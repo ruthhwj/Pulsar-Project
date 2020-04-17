@@ -34,7 +34,7 @@ def get_intensities(df, flag):  # Reads dataframe, returns 50x2246 array for plo
         #######scatter plots of the 1D Monte Carlo results
 
 
-data2d = pd.read_csv('results_a1a2.txt', sep=",", header=None)
+data2d = pd.read_csv('results_a1a2_3.txt', sep=",", header=None)
 
 # 16/04/20 results of N=500 monte carlo simulation for cone intensities
 #
@@ -86,7 +86,7 @@ plt.show()
 #this is due to global_norm normalising the peak intensity value to 1 regardless of intensity.
 #so we need to analyse the ratio of p1/p2.
 
-"""
+
 #PLOT 2: present as 2d with colourmap as fitmeasure
 plt.scatter(data2d.a1, data2d.a2, c=data2d.fmeasure, cmap='BrBG', linewidth=1)#cool,BrBg, twilight_shifted
 plt.xlabel('Cone 1 Intensity')
@@ -94,7 +94,7 @@ plt.ylabel('Cone 2 Intensity')
 cbar = plt.colorbar()
 cbar.set_label('Reduced Chi Squared')
 plt.show()
-
+"""
 
 #PLOT 3: make it a 3d surface
 ax = plt.axes(projection='3d')
@@ -102,7 +102,7 @@ ax.plot_trisurf(data.p1, data.p2, data.fmeasure, cmap='cool') #the sickest plot 
 plt.show()
 """
       #Histograms of the pixel intensity ranges
-""""""
+"""
 df_exp = read_pulsar("weak.all37.p3fold.ASCII")
 df_model = read_pulsar("refpulsar.gg.ASCII")
 
@@ -127,4 +127,4 @@ plt.show()
 df = pd.DataFrame([exp, model], columns=["Experimental Intensities", "Model Intensities"])
 boxplot = df.boxplot(column=["Experimental Intensities", "Model Intensities"], sym="")
 print("here")
-boxplot.show()
+boxplot.show()"""
