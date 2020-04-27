@@ -123,6 +123,7 @@ while c < 10001:
  osm_choice = round(rd.choice(osm),0)
 
 
+
  pulsar_arg[1] = str(a1)
  pulsar_arg[2] = str(b1)
  pulsar_arg[3] = str(c1)
@@ -132,6 +133,10 @@ while c < 10001:
  pulsar_arg[8] = str(b2)
  pulsar_arg[9] = str(c2)
  pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
+
+ print(str(pulsar_arg[5]))
+ print(str(pulsar_arg[6]))
+
 
  subprocess.check_output(pulsar_arg)
 
