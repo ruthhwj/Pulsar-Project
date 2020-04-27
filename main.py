@@ -16,11 +16,11 @@ import glob, os
 
 
 #push comment
-pulsar_arg=["./pulsar-getter.sh", "0.5", "10.5", "1","15","0.85","45","0.5","7.7","1", "15", "20", "-2.4", "refpulsar.gg"]
-pulsar_arg_names = ["scriptname", "Cone1Intensity", "Cone1BeamAngle", "Cone1BeamletAngle","Cone1NumberOfSparks", "Eccentricity", "Orientation", "Cone2Intensity",
-                    "Cone2BeamAngle", "Cone2BeamletAngle","Cone2NumberOfSparks", "Alpha", "Beta", "Filename"]
-pulsar_arg_ranges = [[0.2, 1], [10, 11.5], [0.5, 2], [10, 15], [0, 0.99], [40, 55], [0.2, 1], [7.5,8.1], [0.5,2],[5,15],[0, 45],[0, -45]]
-# [cone1intensity, cone1beamangle, cone1beamletangle, cone1numberofsparks, eccentricity, orientation, cone2intensity, cone2beamangle, cone2beamletangle, cone2numberofsparks, alpha, beta
+pulsar_arg=["./pulsar-getter.sh", "0.5", "10.5", "1", "15" , "17", "0.85", "45", "0.5", "7.7", "1", "15", "4", "9", "-2.4", "refpulsar.gg"]
+pulsar_arg_names = ["scriptname", "Cone1Intensity", "Cone1BeamAngle", "Cone1BeamletAngle","Cone1NumberOfSparks", "Cone1phi0", "Eccentricity", "Orientation", "Cone2Intensity",
+                    "Cone2BeamAngle", "Cone2BeamletAngle","Cone2NumberOfSparks", "Cone2phi0", "Alpha", "Beta", "Filename"]
+pulsar_arg_ranges = [[0.2, 1], [10, 11.5], [0.5, 2], [10, 15], [14,20] , [0, 0.99], [40, 55], [0.2, 1], [7.5,8.1], [0.5,2], [5,15], [1 ,7] ,[0, 45],[0, -45]]
+# [cone1intensity, cone1beamangle, cone1beamletangle, cone1numberofsparks, cone1phi0, eccentricity, orientation, cone2intensity, cone2beamangle, cone2beamletangle, cone2numberofsparks, cone2phi0, alpha, beta
 pulsars_args = {}  # pulsar_number : pulsar_arg list
 
 
@@ -50,55 +50,38 @@ def fit_measure(intensities_ref, intensities_img):
       chi += abs(x1 * x1 / intensities_ref[i])
       return (chi)
 
-def compare_pulsars(pulsar_number):
+def compare_pulsars(pulsar_number, intensities_exp, b1):
     results = []
-    try:
-        df_sim = read_pulsar("SimPulse" + pulsar_number + ".gg.final.ASCII")
-    except:
-        raise
+    df_sim = read_pulsar("SimPulse" + pulsar_number + ".gg.ASCII")
     intensities_sim = get_intensities(df_sim, 1)
     chi = fit_measure(intensities_exp, intensities_sim)
     print("Pulsar " + pulsar_number + "has a fit measurement of " + str(chi))
     results.append([b1,chi])
-    np.savetxt('results_{}.txt'.format(pulsar_arg_names[i]), results, delimiter=',')
     os.remove("SimPulse" + pulsar_number + ".gg")
-    os.remove("SimPulse" + pulsar_number + ".gg.D.normalised")
-    os.remove("SimPulse" + pulsar_number + ".gg.final.ASCII")
+    os.remove("SimPulse" + pulsar_number + ".gg.ASCII")
+    return results
 
 # Main code starts here
 def main():
     df_exp = read_pulsar("norm_exp.ASCII")
     intensities_exp = get_intensities(df_exp, 1)
-    for i in range(4,13):
+    for i in [x for x in range(1,15) if x != 4 and x !=11]:
+        results = []
         c=1
-        while c <= 20:
+        while c<=20:
+            pulsar_number=str(c)
+            b1 = np.random.uniform(pulsar_arg_ranges[i-1][0], pulsar_arg_ranges[i-1][1])
+            pulsar_arg[15]="SimPulse{}.gg".format(str(pulsar_number))
+            pulsar_arg[i]='{0:.2f}'.format(float(str(b1)))
+            print("Pulsar Arg {} = {} ".format(i, pulsar_arg[i]))
+            proc = subprocess.run(pulsar_arg)
             try:
-                pulsar_number = str(c)
+                results=results+compare_pulsars(pulsar_number, intensities_exp, b1)
+            except Exception:
+                continue
+            finally:
                 c+=1
-             #pulsar_arg[1] = str((param_dict[1][i]))
-                pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
-                b1 = np.random.uniform(pulsar_arg_ranges[i-1][0], pulsar_arg_ranges[i-1][1])
-                print(b1)
-                pulsar_arg[4] = str(14)
-                pulsar_arg[i] ='{0:.4f}'.format(float(str(b1)))
-                x = pulsar_arg[i]
-                print(pulsar_arg[i])
-                subprocess.check_output(pulsar_arg)
-                df_sim = read_pulsar("SimPulse" + pulsar_number + ".gg.final.ASCII")
-            except:
-                try:
-                    print("Exception Called, testing for limits error")
-                    pulsar_arg[i]=str(float(pulsar_arg[i])+0.0001)
-                    subprocess.check_output(pulsar_arg)
-                    df_sim = read_pulsar("SimPulse" + pulsar_number + ".gg.final.ASCII")
-                except:
-                    print("Type conversion error, rounding to nearest integer")
-                    pulsar_arg[i] = int(float(pulsar_arg[i]))
-                    x=pulsar_arg[i]
-                    subprocess.check_output(pulsar_arg[i])
-                    compare_pulsars(pulsar_number)
-
-         # set arguments
+        np.savetxt('results{}.txt'.format(pulsar_arg_names[i]), results, delimiter=',')
 
 
 if __name__ == '__main__':
