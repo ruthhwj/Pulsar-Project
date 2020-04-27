@@ -38,8 +38,9 @@ def plot_pulsar(df_pixelarray):
 def gaussian(x, mu, sig):
   return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
 
-
-
+pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_columns', 500)
+pd.set_option('display.width', 1000)
 
 
       #main code#
@@ -68,18 +69,19 @@ while i < 50:
 
 
 
-data2d = pd.read_csv('results_a1a2_2704.txt', sep=",", header=None)
+data2d = pd.read_csv('results_full_270420.txt', sep=",", header=None)
 
-data2d.columns = ["a1", "a2", "chi"]
+data2d.columns = ["a1", "a2", "b1", "b2", "c1", "c2", "E", "osm", "chi"]
 
 print(data2d.nsmallest(10, 'chi')) #print parameters which give the minimum fmeasures
-print(data2d.nlargest(10, 'chi'))
+
 
 #PLOT 2: scatter plot
-plt.scatter(data2d.a2, data2d.chi, linewidth=1)#cool,BrBg, twilight_shifted
-plt.xlabel('Cone 2 Intensity')
+plt.scatter(data2d.osm, data2d.chi, linewidth=1)#cool,BrBg, twilight_shifted
+plt.xlabel('Eccentricity')
 plt.ylabel('Reduced Chi Squared')
 plt.show()
+
 """"
 
 

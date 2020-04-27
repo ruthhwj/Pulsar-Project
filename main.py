@@ -16,7 +16,7 @@ import glob, os
 
 
 #push comment
-pulsar_arg=["./pulsar-getter.sh", "233.940149", "10.5", "1","15","0.8", "45", "60.108976","7.7","0.85", "15", "20", "-2.4", "refpulsar.gg"]
+pulsar_arg=["./pulsar-getter.sh", "233.940149", "10.5", "1","15","0.8", "45", "60.108976","7.7","0.85", "15", "20", "-2.4", "refpulsar.gg", "17", "29"]
 
 results = []
 
@@ -111,16 +111,18 @@ while c < 10001:
 
  pulsar_number = str(c)
  a1 = rd.uniform(230, 250)  # 1
- b1 = rd.uniform(10, 14)  # 2
- c1 = rd.uniform(1, 1.5)  # 3
- E = [0.7, 0.72, 0.74, 0.76, 0.78, 0.80, 0.82, 0.84, 0.86,0.88,0.90] # avoid weird floating point error
+ b1 = rd.uniform(9, 12)  # 2
+ c1 = rd.uniform(1, 2)  # 3
+ E = [0.7, 0.72, 0.74, 0.76, 0.78, 0.80, 0.82, 0.84, 0.86, 0.88, 0.90] # avoid weird floating point error
  osm = [43, 44, 45, 46, 47]
- a2 = rd.uniform(60, 80)  # 7
- b2 = rd.uniform(6, 10)  # 8
- c2 = rd.uniform(0.5, 1)  # 9
+ a2 = rd.uniform(40, 80)  # 7
+ b2 = rd.uniform(4, 8)  # 8
+ c2 = rd.uniform(0.5, 1.5)  # 9
+ d1 = rd.uniform(14, 20)
+ d2 = rd.uniform(26, 32)
 
- E_choice = round(rd.choice(E),2)
- osm_choice = round(rd.choice(osm),0)
+ E_choice = round(rd.choice(E), 2)
+ osm_choice = round(rd.choice(osm), 0)
 
 
 
@@ -133,9 +135,8 @@ while c < 10001:
  pulsar_arg[8] = str(b2)
  pulsar_arg[9] = str(c2)
  pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
-
- print(str(pulsar_arg[5]))
- print(str(pulsar_arg[6]))
+ pulsar_arg[14] = str(d1)
+ pulsar_arg[15] = str(d2)
 
 
  subprocess.check_output(pulsar_arg)
@@ -144,7 +145,7 @@ while c < 10001:
  intensities_sim = get_intensities(df_sim, 1)
 
  chi = fit_measure(intensities_exp_flat, intensities_sim)
- results.append([a1, a2, b1, b2, c1, c2, E_choice, osm_choice, chi])
+ results.append([a1, a2, b1, b2, c1, c2, d1, d2, E_choice, osm_choice, chi])
 
 
  print( "Pulsar "+ pulsar_number + " has a fit measure of " + str(chi))
@@ -169,7 +170,7 @@ while c < 10001:
  #save results file every 500 runs
 
  if (c/500).is_integer():
-   np.savetxt('results_full_270420.txt', results, delimiter=',')
+   np.savetxt('results_full_270420_2.txt', results, delimiter=',')
 
 
 
