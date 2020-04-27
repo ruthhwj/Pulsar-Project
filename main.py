@@ -104,32 +104,32 @@ chi = fit_measure(intensities_exp_flat, intensities_ref)
 print( "Reference pulsar has a fit measure of " + str(chi))
 
 
-while c < 501:
- # set arguments
- pulsar_number = str(c)
+while c < 10001:
  c+=1
 
- #rd.choice()
+ # set arguments
 
+ pulsar_number = str(c)
+ a1 = rd.uniform(230, 250)  # 1
+ b1 = rd.uniform(10, 14)  # 2
+ c1 = rd.uniform(1, 1.5)  # 3
+ E = [0.7, 0.725, 0.75, 0.775, 0.8, 0.825, 0.85, 0.875, 0.9] # avoid weird floating point error
+ osm = [43, 44, 45, 46, 47]
+ a2 = rd.uniform(60, 80)  # 7
+ b2 = rd.uniform(6, 10)  # 8
+ c2 = rd.uniform(0.5, 1)  # 9
 
-
- a1 = rd.uniform(200, 300)  # 1
- #b1 = rd.uniform(10,11.5)  # 2 10.5
- #c1 = rd.uniform(1, 6)  # 3
- #E = list(0.7, 0.9, 0.025) # 5
- #osm = list(40, 60, 1)  # 6
- a2 = rd.uniform(10, 100)  # 7
- #b2 = rd.uniform(6, 8)  # 8 7.7
- #c2 = rd.uniform(1, 6)  # 9
+ E_choice = rd.choice(E)
+ osm_choice = rd.choice(osm)
 
  pulsar_arg[1] = str(a1)
- #pulsar_arg[2] = str(b1)
- #pulsar_arg[3] = str(c1)
- #pulsar_arg[5] = str(rd.choice(E))
- #pulsar_arg[6] = str(rd.choice(osm))
+ pulsar_arg[2] = str(b1)
+ pulsar_arg[3] = str(c1)
+ pulsar_arg[5] = str(E_choice)
+ pulsar_arg[6] = str(osm_choice)
  pulsar_arg[7] = str(a2)
- #pulsar_arg[8] = str(b2)
- #pulsar_arg[9] = str(c2)
+ pulsar_arg[8] = str(b2)
+ pulsar_arg[9] = str(c2)
  pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
 
  subprocess.check_output(pulsar_arg)
@@ -138,7 +138,7 @@ while c < 501:
  intensities_sim = get_intensities(df_sim, 1)
 
  chi = fit_measure(intensities_exp_flat, intensities_sim)
- results.append([a1, a2, chi])
+ results.append([a1, a2, b1, b2, c1, c2, E_choice, osm_choice, chi])
 
 
  print( "Pulsar "+ pulsar_number + " has a fit measure of " + str(chi))
@@ -148,12 +148,10 @@ while c < 501:
 
  if chi < min_chi:
    min_chi = chi
-   min_a1 = a1
-   min_a2 = a2
 
 
  print("current minimum reduced chi squared = " + str(min_chi))
- print("for (a1,a2) = (" + str(min_a1) + ", " + str(min_a2) + ")")
+ #print("for (a1,a2) = (" + str(min_a1) + ", " + str(min_a2) + ")")
  #print("for b2 = "+str(min_b2))
 
 
@@ -162,5 +160,10 @@ while c < 501:
  os.remove("SimPulse" + pulsar_number + ".gg")
  os.remove("SimPulse"+pulsar_number+".gg.ASCII")
 
+ #save results file every 500 runs
 
-np.savetxt('results_a1a2_2704.txt', results, delimiter=',')
+ if (c/500).is_integer():
+   np.savetxt('results_full_270420.txt', results, delimiter=',')
+
+
+
