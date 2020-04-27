@@ -38,30 +38,49 @@ def plot_pulsar(df_pixelarray):
 def gaussian(x, mu, sig):
   return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
 
-      #main code
-
-        #######scatter plots of the 1D Monte Carlo results
 
 
 
 
-""""
+      #main code#
 
-data2d = pd.read_csv('results_b1b2_b2refine.txt', sep=",", header=None)
+#data preprocessing
+"""
+df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")
 
-# 16/04/20 results of N=500 monte carlo simulation for cone intensities
-#
+pulsar = get_intensities(df_exp, 0)  # (50 by 600, we want to process the [:,100:300] region)
 
-data2d.columns = ["b2", "fmeasure"]
+i = 0
+j = 0
+param = 1
 
-print(data2d.nsmallest(10, 'fmeasure')) #print parameters which give the minimum fmeasures
-print(data2d.nlargest(10, 'fmeasure'))
+while i < 50:
+  while j < 300:
+    gauss_j = (gaussian(float(j), 85, 25))
+    pulsar[i][j] = ((param * gauss_j + 1) * pulsar[i][j])
+    j += 1
+  i += 1
+  j = 0
+
+    #######scatter plots of the 1D Monte Carlo results
+
+"""
+
+
+
+data2d = pd.read_csv('results_a1a2_2704.txt', sep=",", header=None)
+
+data2d.columns = ["a1", "a2", "chi"]
+
+print(data2d.nsmallest(10, 'chi')) #print parameters which give the minimum fmeasures
+print(data2d.nlargest(10, 'chi'))
+
 #PLOT 2: scatter plot
-plt.scatter(data2d.b2, data2d.fmeasure, linewidth=1)#cool,BrBg, twilight_shifted
-plt.xlabel('Cone 2 Half Opening Beam Angle')
+plt.scatter(data2d.a2, data2d.chi, linewidth=1)#cool,BrBg, twilight_shifted
+plt.xlabel('Cone 2 Intensity')
 plt.ylabel('Reduced Chi Squared')
 plt.show()
-
+""""
 
 
 
@@ -98,30 +117,10 @@ plt.show()
 """
       #Histograms of the pixel intensity ranges
 
-df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")
-#df_model = read_pulsar("refpulsar.gg.ASCII")
-
-pulsar = get_intensities(df_exp,0) #(50 by 600, we want to process the [:,100:300] region)
-
-#pixelarray[:, 1400:2000] y,x 50,600
-
-#print(str(pulsar[40][200]))
-
-i=0
-j=0
-param = 1.1
-while i < 50:
- while j < 300:
-  gauss_j = (gaussian(float(j), 85, 25))
-  pulsar[i][j] = ((param*gauss_j+1)*pulsar[i][j])
-  j += 1
- i+=1
- j=0
 
 
 
-
-plot_pulsar(pulsar)
+#plot_pulsar(pulsar)
 
 #data = pulsar.flatten()
 

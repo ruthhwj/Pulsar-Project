@@ -16,7 +16,7 @@ import glob, os
 
 
 #push comment
-pulsar_arg=["./pulsar-getter.sh", "233.940149", "10.621519", "1","15","0.8", "45", "60.108976","6.917815","0.85", "15", "20", "-2.4", "refpulsar.gg"]
+pulsar_arg=["./pulsar-getter.sh", "233.940149", "10.5", "1","15","0.8", "45", "60.108976","7.7","0.85", "15", "20", "-2.4", "refpulsar.gg"]
 
 results = []
 
@@ -54,7 +54,7 @@ def fit_measure(intensities_ref, intensities_img):
     x1 = (intensities_img[i] - intensities_ref[i])
     chi += abs(x1*x1)
 
-  return (chi/(RMS_noise*(50*300-2)))  #x1*x1/DoF*noise
+  return (chi/(RMS_noise*(50*300-2)))  #x1*x1/noise*DoF
 
 def gaussian(x, mu, sig):
   return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
@@ -62,7 +62,7 @@ def gaussian(x, mu, sig):
 
 
 c = 1
-min_chi = 10
+min_chi = 10000
 min_a1 = 0
 min_a2 = 0
 i=0
@@ -78,7 +78,7 @@ intensities_exp = get_intensities(df_exp, 0)
 
 while i < 50:
  while j < 300:
-  gauss_j = (gaussian(float(j), 85, 25))
+  gauss_j = (gaussian(float(j), 85, 25)) #centred on bin 85, width 25
   intensities_exp[i][j] = ((param*gauss_j+1)*intensities_exp[i][j])
   j += 1
  i+=1
@@ -109,20 +109,24 @@ while c < 501:
  pulsar_number = str(c)
  c+=1
 
- a1 = rd.uniform(100, 400)  # 1
+ #rd.choice()
+
+
+
+ a1 = rd.uniform(200, 300)  # 1
  #b1 = rd.uniform(10,11.5)  # 2 10.5
  #c1 = rd.uniform(1, 6)  # 3
- #E = rd.uniform(0.5, 0.95)  # 5
- #osm = rd.uniform(40, 60)  # 6
- a2 = rd.uniform(100, 400)  # 7
+ #E = list(0.7, 0.9, 0.025) # 5
+ #osm = list(40, 60, 1)  # 6
+ a2 = rd.uniform(10, 100)  # 7
  #b2 = rd.uniform(6, 8)  # 8 7.7
  #c2 = rd.uniform(1, 6)  # 9
 
  pulsar_arg[1] = str(a1)
  #pulsar_arg[2] = str(b1)
  #pulsar_arg[3] = str(c1)
- #pulsar_arg[5] = str(E)
- #pulsar_arg[6] = str(osm)
+ #pulsar_arg[5] = str(rd.choice(E))
+ #pulsar_arg[6] = str(rd.choice(osm))
  pulsar_arg[7] = str(a2)
  #pulsar_arg[8] = str(b2)
  #pulsar_arg[9] = str(c2)
