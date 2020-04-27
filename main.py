@@ -113,13 +113,13 @@ while c < 10001:
  a1 = rd.uniform(230, 250)  # 1
  b1 = rd.uniform(10, 14)  # 2
  c1 = rd.uniform(1, 1.5)  # 3
- E = [0.7, 0.725, 0.75, 0.775, 0.8, 0.825, 0.85, 0.875, 0.9] # avoid weird floating point error
- osm = [43., 44., 45., 46., 47.]
+ E = [0.7, 0.72, 0.74, 0.76, 0.78, 0.80, 0.82, 0.84, 0.86,0.88,0.90] # avoid weird floating point error
+ osm = [43, 44, 45, 46, 47]
  a2 = rd.uniform(60, 80)  # 7
  b2 = rd.uniform(6, 10)  # 8
  c2 = rd.uniform(0.5, 1)  # 9
 
- E_choice = round(rd.choice(E),3)
+ E_choice = round(rd.choice(E),2)
  osm_choice = round(rd.choice(osm),0)
 
 
