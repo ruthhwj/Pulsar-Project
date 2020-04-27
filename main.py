@@ -31,8 +31,8 @@ def read_pulsar(string): # Reads ASCII, returns dataframe  #"weak.all37.p3fold.A
 
 def get_intensities(df, flag):  # Reads dataframe, returns 50x2246 array for plotting OR as a list
   intensities = np.array(df.col4)  # extract intensities column
-  pixelarray = np.array(intensities).reshape(50, 2246)  # shape into array with dimensions of image
-  croppedarray = pixelarray[:, 1400:2000] #rough onpulse region of exp data
+  pixelarray = np.array(intensities).reshape(50, 1123)  # shape into array with dimensions of image
+  croppedarray = pixelarray[:, 700:1000] #rough onpulse region of exp data
 
   if flag == 0:
     return croppedarray # want this for plotting
@@ -54,52 +54,77 @@ def fit_measure(intensities_ref, intensities_img):
     x1 = (intensities_img[i] - intensities_ref[i])
     chi += abs(x1*x1)
 
-  return (chi/(np.var(intensities_img)*(50*600-2)))  #x1*x1/DoF
+  return (chi/(RMS_noise*(50*300-2)))  #x1*x1/DoF*noise
+
+def gaussian(x, mu, sig):
+  return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
 
 
-
-# Main code starts here
 
 c = 1
 min_chi = 10
-min_b1 = 0
-min_b2 = 0
+min_a1 = 0
+min_a2 = 0
+i=0
+j=0
+param = 1
 
-df_exp = read_pulsar("weak.all37.p3fold.ASCII")
-intensities_exp = get_intensities(df_exp, 1)
+# Main code starts here #
+
+df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")
+intensities_exp = get_intensities(df_exp, 0)
+
+# artifically brighten left component using a gaussian centred on the brightest column #
+
+while i < 50:
+ while j < 300:
+  gauss_j = (gaussian(float(j), 85, 25))
+  intensities_exp[i][j] = ((param*gauss_j+1)*intensities_exp[i][j])
+  j += 1
+ i+=1
+ j=0
+
+intensities_exp_flat = intensities_exp.flatten() #1d list used for analysis
+
+# find RMS noise for reduced chi squared #
+
+intensities_RMS = np.array(df_exp.col4)
+exp_croppedlist = ((intensities_RMS.reshape(50, 1123))[:, 600:700]).flatten()  #off pulse RMS noise
+RMS_noise = np.var(exp_croppedlist)
+
+# process reference pulsar #
 
 subprocess.check_output(pulsar_arg)
 
 df_ref = read_pulsar("refpulsar.gg.ASCII")
 intensities_ref = get_intensities(df_ref, 1)
 
-
-chi = fit_measure(intensities_exp, intensities_ref)
+chi = fit_measure(intensities_exp_flat, intensities_ref)
 
 print( "Reference pulsar has a fit measure of " + str(chi))
 
 
-while c < 101:
+while c < 501:
  # set arguments
  pulsar_number = str(c)
  c+=1
 
- #a1 = rd.uniform(220, 250)  # 1
+ a1 = rd.uniform(100, 400)  # 1
  #b1 = rd.uniform(10,11.5)  # 2 10.5
  #c1 = rd.uniform(1, 6)  # 3
  #E = rd.uniform(0.5, 0.95)  # 5
  #osm = rd.uniform(40, 60)  # 6
- #a2 = rd.uniform(50, 80)  # 7
- b2 = rd.uniform(6, 8)  # 8 7.7
+ a2 = rd.uniform(100, 400)  # 7
+ #b2 = rd.uniform(6, 8)  # 8 7.7
  #c2 = rd.uniform(1, 6)  # 9
 
- #pulsar_arg[1] = str(a1)
+ pulsar_arg[1] = str(a1)
  #pulsar_arg[2] = str(b1)
  #pulsar_arg[3] = str(c1)
  #pulsar_arg[5] = str(E)
  #pulsar_arg[6] = str(osm)
- #pulsar_arg[7] = str(a2)
- pulsar_arg[8] = str(b2)
+ pulsar_arg[7] = str(a2)
+ #pulsar_arg[8] = str(b2)
  #pulsar_arg[9] = str(c2)
  pulsar_arg[13] = "SimPulse{}.gg".format(str(pulsar_number))
 
@@ -108,24 +133,24 @@ while c < 101:
  df_sim = read_pulsar("SimPulse"+pulsar_number+".gg.ASCII")
  intensities_sim = get_intensities(df_sim, 1)
 
- chi = fit_measure(intensities_exp, intensities_sim)
- results.append([b2, chi])
+ chi = fit_measure(intensities_exp_flat, intensities_sim)
+ results.append([a1, a2, chi])
 
 
  print( "Pulsar "+ pulsar_number + " has a fit measure of " + str(chi))
  #print("(b1,b2) = ("+str(b1)+", "+str(b2)+")")
- print("b2 = "+ str(b2))
+ print("(a1,a2) = ("+ str(a1)+","+str(a2)+")")
 
 
  if chi < min_chi:
    min_chi = chi
-   #min_b1 = b1
-   min_b2 = b2
+   min_a1 = a1
+   min_a2 = a2
 
 
  print("current minimum reduced chi squared = " + str(min_chi))
- #print("for (b1,b2) = (" + str(min_b1) + ", " + str(min_b2) + ")")
- print("for b2 = "+str(min_b2))
+ print("for (a1,a2) = (" + str(min_a1) + ", " + str(min_a2) + ")")
+ #print("for b2 = "+str(min_b2))
 
 
 
@@ -134,4 +159,4 @@ while c < 101:
  os.remove("SimPulse"+pulsar_number+".gg.ASCII")
 
 
-np.savetxt('results_b1b2_b2refine.txt', results, delimiter=',')
+np.savetxt('results_a1a2_2704.txt', results, delimiter=',')

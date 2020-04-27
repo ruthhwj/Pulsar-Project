@@ -21,20 +21,22 @@ def read_pulsar(string):  # Reads ASCII, returns dataframe  #"weak.all37.p3fold.
 
 def get_intensities(df, flag):  # Reads dataframe, returns 50x2246 array for plotting OR as a list
   intensities = np.array(df.col4)  # extract intensities column
-  pixelarray = np.array(intensities).reshape(50, 2246)  # shape into array with dimensions of image
-  croppedarray = pixelarray[:, 1400:2000]  # rough onpulse region of exp data
+  pixelarray = np.array(intensities).reshape(50, 1123)  # shape into array with dimensions of image
+  croppedarray = pixelarray[:, 700:1000]  # rough onpulse region of exp data
 
   if flag == 0:
     return croppedarray  # want this for plotting
   if flag != 0:
     return croppedarray.flatten()  # want this for analysis
 
-def plot_pulsar(df_pixelarray, title):
+def plot_pulsar(df_pixelarray):
  print("Plotting pulsar...")
- plt.imshow(df_pixelarray, 'afmhot', origin='lower', interpolation='none', aspect='auto',extent=[1400,2000,0,50])
- plt.set_title(title)
+ plt.imshow(df_pixelarray, 'afmhot', origin='lower', interpolation='none', aspect='auto',extent=[700,1000,0,50])
  plt.colorbar()
  plt.show()
+
+def gaussian(x, mu, sig):
+  return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
 
       #main code
 
@@ -43,14 +45,14 @@ def plot_pulsar(df_pixelarray, title):
 
 
 
+""""
 
-
-data2d = pd.read_csv('results_b1b2.txt', sep=",", header=None)
+data2d = pd.read_csv('results_b1b2_b2refine.txt', sep=",", header=None)
 
 # 16/04/20 results of N=500 monte carlo simulation for cone intensities
 #
-""""
-data2d.columns = ["b1", "b2", "fmeasure"]
+
+data2d.columns = ["b2", "fmeasure"]
 
 print(data2d.nsmallest(10, 'fmeasure')) #print parameters which give the minimum fmeasures
 print(data2d.nlargest(10, 'fmeasure'))
@@ -84,19 +86,7 @@ data.columns = ["p1", "p2", "fmeasure"] #cone 1 intensity, cone 2 intensity, fit
 #rdata = data[data['chi'] > 10] # can crop out crazy outliers that make the plots a bit hard to interpret
 
 
-#PLOT 1: 3d scatter plot
-dplot = plt.figure().gca(projection='3d')
-dplot.scatter(data2d.a1, data2d.a2, data2d.fmeasure,  c=data2d.fmeasure, cmap='BrBG', linewidth=1 )
-dplot.set_xlabel('Cone 1 Intensity')
-dplot.set_ylabel('Cone 2 Intensity')
-dplot.set_zlabel('Reduced Chi Squared')
-plt.show()
-"""
 
-#Looking at the N=500 data shows that the fit measures for (p1,p2) = (1,0) and (0.4,0) are very similar
-#this is due to global_norm normalising the peak intensity value to 1 regardless of intensity.
-#so we need to analyse the ratio of p1/p2.
-"""
 
 #PLOT 2: present as 2d with colourmap as fitmeasure
 plt.scatter(data2d.b1, data2d.b2, c=data2d.fmeasure, cmap='BrBG', linewidth=1)#cool,BrBg, twilight_shifted
@@ -105,17 +95,36 @@ plt.ylabel('Cone 2 Half Opening Beam Angle')
 cbar = plt.colorbar()
 cbar.set_label('Reduced Chi Squared')
 plt.show()
-
-
-#PLOT 3: make it a 3d surface
-ax = plt.axes(projection='3d')
-ax.plot_trisurf(data.p1, data.p2, data.fmeasure, cmap='cool') #the sickest plot you've ever seen
-plt.show()
 """
       #Histograms of the pixel intensity ranges
 
-df_exp = read_pulsar("weak.all37.p3fold.ASCII")
-df_model = read_pulsar("refpulsar.gg.ASCII")
+df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")
+#df_model = read_pulsar("refpulsar.gg.ASCII")
+
+pulsar = get_intensities(df_exp,0) #(50 by 600, we want to process the [:,100:300] region)
+
+#pixelarray[:, 1400:2000] y,x 50,600
+
+#print(str(pulsar[40][200]))
+
+i=0
+j=0
+param = 1.1
+while i < 50:
+ while j < 300:
+  gauss_j = (gaussian(float(j), 85, 25))
+  pulsar[i][j] = ((param*gauss_j+1)*pulsar[i][j])
+  j += 1
+ i+=1
+ j=0
+
+
+
+
+plot_pulsar(pulsar)
+
+#data = pulsar.flatten()
+
 """
 exp = get_intensities(df_exp, 1)
 model = get_intensities(df_model, 1)
@@ -138,9 +147,10 @@ plt.show()
 df = pd.DataFrame([exp, model], columns=["Experimental Intensities", "Model Intensities"])
 boxplot = df.boxplot(column=["Experimental Intensities", "Model Intensities"], sym="")
 print("here")
-boxplot.show()"""
+boxplot.show()
 
 
+## difference images ###
 
 p1_0 = read_pulsar("a1a2_3_pulsar.ASCII")
 p2_0 = read_pulsar("b1b2_pulsar.ASCII")
@@ -160,3 +170,4 @@ plt.show()
 plt.imshow(dif_2, cmap='afmhot', aspect='auto', extent=[1400,2000,0,50])
 plt.colorbar()
 plt.show()
+"""
