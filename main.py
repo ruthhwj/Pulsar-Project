@@ -143,7 +143,7 @@ while c < 10001:
 
  print( "Pulsar "+ pulsar_number + " has a fit measure of " + str(chi))
  #print("(b1,b2) = ("+str(b1)+", "+str(b2)+")")
- print("(a1,a2) = ("+ str(a1)+","+str(a2)+")")
+ #print("(a1,a2) = ("+ str(a1)+","+str(a2)+")")
 
 
  if chi < min_chi:
