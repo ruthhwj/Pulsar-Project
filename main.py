@@ -114,13 +114,14 @@ while c < 10001:
  b1 = rd.uniform(10, 14)  # 2
  c1 = rd.uniform(1, 1.5)  # 3
  E = [0.7, 0.725, 0.75, 0.775, 0.8, 0.825, 0.85, 0.875, 0.9] # avoid weird floating point error
- osm = [43, 44, 45, 46, 47]
+ osm = [43., 44., 45., 46., 47.]
  a2 = rd.uniform(60, 80)  # 7
  b2 = rd.uniform(6, 10)  # 8
  c2 = rd.uniform(0.5, 1)  # 9
 
- E_choice = rd.choice(E)
- osm_choice = rd.choice(osm)
+ E_choice = round(rd.choice(E),3)
+ osm_choice = round(rd.choice(osm),0)
+
 
  pulsar_arg[1] = str(a1)
  pulsar_arg[2] = str(b1)
