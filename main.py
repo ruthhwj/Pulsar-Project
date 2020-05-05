@@ -18,25 +18,22 @@ def read_pulsar(string): # Reads ASCII, returns dataframe  #"weak.all37.p3fold.A
 
 
 def get_intensities(df, flag):  # Reads dataframe, returns 50x2246 array for plotting OR as a list
-  intensities = np.array(df.col4)  # extract intensities column
-  pixelarray = np.array(intensities).reshape(50, 1123)  # shape into array with dimensions of image
-  croppedarray = pixelarray[:, 700:1000] #rough onpulse region of exp data
+    intensities = np.array(df.col4)  # extract intensities column
+    pixelarray = np.array(intensities).reshape(50, 1123)  # shape into array with dimensions of image
+    croppedarray = pixelarray[:, 700:1000] #rough onpulse region of exp data
 
-  if flag == 0:
-    return croppedarray # want this for plotting
-  if flag != 0:
-    return croppedarray.flatten()  # want this for analysis
+    if flag == 0:
+        return croppedarray # want this for plotting
+    if flag != 0:
+        return croppedarray.flatten()  # want this for analysis
 
 
 def fit_measure(intensities_ref, intensities_img):
-    min_chi = 10000
     chi = 0
     for i in range(len(intensities_ref)):
         x1 = (intensities_img[i] - intensities_ref[i])
-        chi += abs(x1 * x1 / intensities_ref[i])
-    if chi<min_chi:
-        chi=min_chi
-    return chi / (RMS_noise * (50 * 300 - 2))  #
+        chi += abs(x1 * x1)/ (RMS_noise * (50 * 300 - 2))
+    return chi   #
 
 
 def gaussian(x, mu, sig):
@@ -142,9 +139,9 @@ def pulsar_worker_1d(arg, exp):
 
 
 df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")  # experimental p3fold here
-intensities_exp = get_intensities(df_exp, 1)
+intensities_exp = brighten(get_intensities(df_exp, 0)).flatten()
 intensities_RMS = np.array(df_exp.col4)
-exp_croppedlist = ((intensities_RMS.reshape(50, 1123))[:, 600:700]).flatten()  # off pulse RMS noise
+exp_croppedlist = ((intensities_RMS.reshape(50, 1123))[:, 0:600]).flatten()  # off pulse RMS noise
 RMS_noise = np.var(exp_croppedlist)
 
 
@@ -152,7 +149,6 @@ RMS_noise = np.var(exp_croppedlist)
 def main():
 
     pool = mp.Pool(mp.cpu_count() + 2)
-
     #fire off workers
     start_time=time.time()
     for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
