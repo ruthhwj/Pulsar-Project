@@ -11,11 +11,11 @@ pulsar_arg_names = ["scriptname", "Cone1Intensity", "Cone1BeamAngle", "Cone1Beam
 pulsar_arg_ranges = [[230, 250], [9, 12], [1, 2], [10, 15], [14,20] , [0, 0.99], [40, 55], [0.2, 1], [7.5,8.1], [0.5,2], [5,15], [1 ,7]] #ranges over which to search for each variable
 
 
-
 def read_pulsar(string): # Reads ASCII, returns dataframe  #"weak.all37.p3fold.ASCII" "W5testmodel.p3fold.ASCII"
   data = ascii.read(string, data_start=1)
   df = data.to_pandas()
   return df
+
 
 def get_intensities(df, flag):  # Reads dataframe, returns 50x2246 array for plotting OR as a list
   intensities = np.array(df.col4)  # extract intensities column
@@ -34,25 +34,28 @@ def fit_measure(intensities_ref, intensities_img):
     for i in range(len(intensities_ref)):
         x1 = (intensities_img[i] - intensities_ref[i])
         chi += abs(x1 * x1 / intensities_ref[i])
-    # if chi<min_chi:
-    #     chi=min_chi
-    # return chi / (RMS_noise * (50 * 300 - 2))  #
-    return chi
+    if chi<min_chi:
+        chi=min_chi
+    return chi / (RMS_noise * (50 * 300 - 2))  #
+
+
 def gaussian(x, mu, sig):
     return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
 
-# def brighten(exp_data):
-#     i = 0
-#     j = 0
-#     param = 1
-#     while i < 50:
-#         while j < 300:
-#             gauss_j = (gaussian(float(j), 85, 25)) #centred on bin 85, width 25
-#             exp_data[i][j] = ((param*gauss_j+1)*exp_data[i][j])
-#             j+=1
-#         i+=1
-#         j=0
-#     return exp_data
+
+def brighten(exp_data):
+    i = 0
+    j = 0
+    param = 1
+    while i < 50:
+        while j < 300:
+            gauss_j = (gaussian(float(j), 85, 25)) #centred on bin 85, width 25
+            exp_data[i][j] = ((param*gauss_j+1)*exp_data[i][j])
+            j+=1
+        i+=1
+        j=0
+    return exp_data
+
 
 def compare_pulsars_1d(pulsar_number, pulsar_variable, intensities_exp):
     df_sim = read_pulsar("SimPulse{}{}.gg.ASCII".format(pulsar_variable, pulsar_number))
@@ -60,6 +63,7 @@ def compare_pulsars_1d(pulsar_number, pulsar_variable, intensities_exp):
     chi = fit_measure(intensities_exp, intensities_sim)
     print("returning chi")
     return chi
+
 
 def compare_pulsars_all(pulsar_number, N, intensities_exp_flat):
     df_sim = read_pulsar("SimPulse{}{}.gg.ASCII".format(N, pulsar_number))
@@ -137,19 +141,20 @@ def pulsar_worker_1d(arg, exp):
 #     np.savetxt('AllVarResults/results{}.txt'.format(N), res, delimiter=',')
 
 
-
+df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")  # experimental p3fold here
+intensities_exp = get_intensities(df_exp, 1)
+intensities_RMS = np.array(df_exp.col4)
+exp_croppedlist = ((intensities_RMS.reshape(50, 1123))[:, 600:700]).flatten()  # off pulse RMS noise
+RMS_noise = np.var(exp_croppedlist)
 
 
 
 def main():
-    df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")  # experimental p3fold here
-    intensities_exp = get_intensities(df_exp, 1)
-    # intensities_RMS = np.array(df_exp.col4)
-    # exp_croppedlist = ((intensities_RMS.reshape(50, 1123))[:, 600:700]).flatten()  # off pulse RMS noise
-    # RMS_noise = np.var(exp_croppedlist)
+
     pool = mp.Pool(mp.cpu_count() + 2)
 
     #fire off workers
+    start_time=time.time()
     for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
         job = pool.apply_async(pulsar_worker_1d, (i, intensities_exp))
 
@@ -158,6 +163,6 @@ def main():
     #now we are done, kill the listener
     pool.close()
     pool.join()
-
+    print("----%s seconds----" % (time.time()-start_time))
 if __name__ == "__main__":
     main()
