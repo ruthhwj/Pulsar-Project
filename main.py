@@ -113,6 +113,7 @@ def pulsar_worker_all(exp, N):
 
     try:
       chi = compare_pulsars_all(pulsar_number, N, exp)
+      print("Reduced chi squared ="+str(chi))
       result = []
       for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
         result.append(pulsar[i])
