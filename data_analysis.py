@@ -19,6 +19,7 @@ pulsar_arg_names = ["scriptname", "Cone1Intensity", "Cone1BeamAngle", "Cone1Beam
 pulsar_arg_ranges = [[230, 300], [9, 12], [1, 2], [15, 15], [14,20] , [0.5, 0.9], [40, 50], [40, 120], [4,8], [0.5,1.5], [15,15], [26,32]] #ranges over which to search for each variable
 
 
+
 def read_pulsar(string):  # Reads ASCII, returns dataframe  #"weak.all37.p3fold.ASCII" "W5testmodel.p3fold.ASCII"
   data = ascii.read(string, data_start=1)
   df = data.to_pandas()
@@ -66,23 +67,31 @@ pd.set_option('display.width', 1000)
 
 #data preprocessing
 
-df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")  # experimental p3fold here
-intensities_exp = brighten(get_intensities(df_exp, 0)).flatten()
+#df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")  # experimental p3fold here
+#intensities_exp = brighten(get_intensities(df_exp, 0)).flatten()
 
 
-data2d = pd.read_csv('results_full_270420.txt', sep=",", header=None)
+N=100
 
-"""
-data2d.columns = ["a1", "a2", "b1", "b2", "c1", "c2", "E", "osm", "chi"]
+data = pd.read_csv('AllVarResults_N{}.txt'.format(N), sep=",", header=None)
 
-print(data2d.nsmallest(10, 'chi')) #print parameters which give the minimum fmeasures
+col = []
 
+for i in [x for x in range(1, 13) if (x != 4 and x != 11)]:
+    print(i)
+    col.append(pulsar_arg_names[i])
 
-#PLOT 2: scatter plot
-plt.scatter(data2d.osm, data2d.chi, linewidth=1)#cool,BrBg, twilight_shifted
-plt.xlabel('Eccentricity')
-plt.ylabel('Reduced Chi Squared')
-plt.show()
+col.append("chi")
+
+data.columns = col
+
+print(data.nsmallest(20, 'chi')) #print parameters which give the minimum fmeasures
+
+for label in data.items():
+  plt.scatter(data.label, data.chi, linewidth=1)#cool,BrBg, twilight_shifted
+  plt.xlabel(label)
+  plt.ylabel('Reduced Chi Squared')
+  plt.show()
 
 """"
 

@@ -117,9 +117,9 @@ def pulsar_worker_all(exp, N):
       result = []
       for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
         result.append(pulsar[i])
-        result.append(chi)
-        res.append(result)
-        n += 1
+      result.append(chi)
+      res.append(result)
+      n += 1
 
     except Exception:
       print("Skipping")
