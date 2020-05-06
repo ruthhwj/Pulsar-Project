@@ -100,8 +100,7 @@ def pulsar_worker_1d(arg, exp): # int argument,
  def pulsar_worker_all(exp, N):
      n = 1
      res = []
-     #E = [0.7, 0.72, 0.74, 0.76, 0.78, 0.80, 0.82, 0.84, 0.86, 0.88, 0.90]  # avoid weird floating point error
-     #osm = [43, 44, 45, 46, 47]
+
      while n<=N:
          pulsar_number=str(n)
 
@@ -150,8 +149,8 @@ def main():
 #    for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
 #        job = pool.apply_async(pulsar_worker_1d, (i, intensities_exp))
 
-    for n<=N:
-        job = pool.apply_async(pulsar_worker_all, (N, intensities_exp))
+    N=1000
+    job = pool.apply_async(pulsar_worker_all, (N, intensities_exp))
 
     # collect results from the workers through the pool result queue
 
