@@ -1,7 +1,5 @@
 #!/bin/bash
 # Get pulsars 
-fakePulsar -v  -cone "$1 $2 $3 $4 750 12 -1 300 0" -ellipse "$5 $6 1" -cone "$7 $8 $9 ${10} 750 12 -1 300 0" -ellipse "$5 $6 1" -a "${11}" -b "${12}" -nb "2246" -np "50" -gg ${13}
-pmod -norm_global -dev /NULL -ext gg.D.normalised -debase ${13}
-#(creates ${13}.D.normalised)
-pmod -templatedata norm_exp.ASCII -align -oformat ASCII ${13}.D.normalised -output ${13}.final.ASCII
+fakePulsar -v -normdisable -cone "$1 $2 $3 $4 750 $5 -1 300 0" -ellipse "$6 $7 1" -cone "$8 $9 ${10} ${11} 750 ${12} -1 300 0" -ellipse "$6 $7 1" -a "20" -b "-2.4" -nb "1123" -np "50" -gg ${13}
+pmod -templatedata weak.all37.p3fold.rebinned.ASCII -align -oformat ASCII ${13} -output ${13}.ASCII
 #(creates ${13}.final.ASCII)
