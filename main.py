@@ -63,7 +63,7 @@ def compare_pulsars_1d(pulsar_number, pulsar_variable, intensities_exp):
 
 
 def compare_pulsars_all(pulsar_number, N, intensities_exp_flat):
-    df_sim = read_pulsar("SimPulse{}{}.gg.ASCII".format(N, pulsar_number))
+    df_sim = read_pulsar("SimPulse{}N{}.gg.ASCII".format(str(pulsar_number), str(N)))
     intensities_sim = get_intensities(df_sim, 1)
     chi = fit_measure(intensities_exp_flat, intensities_sim)
     print("returning chi")
@@ -112,11 +112,11 @@ def pulsar_worker_all(exp, N):
     subprocess.run(pulsar)
 
     try:
-      x = compare_pulsars_all(pulsar_number, N, exp)
+      chi = compare_pulsars_all(pulsar_number, N, exp)
       result = []
       for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
         result.append(pulsar[i])
-        result.append(x)
+        result.append(chi)
         res.append(result)
 
     except Exception:
@@ -152,7 +152,7 @@ def main():
 #    for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
 #        job = pool.apply_async(pulsar_worker_1d, (i, intensities_exp))
 
-    N = [100,500,1000,5000]
+    N = [100,500]
     for i in N:
      job = pool.apply_async(pulsar_worker_all, (intensities_exp,i))
 
