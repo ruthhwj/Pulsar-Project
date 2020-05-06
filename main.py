@@ -97,41 +97,43 @@ def pulsar_worker_1d(arg, exp): # int argument,
     print("writing Results{} to file".format(pulsar_arg_names[arg]))
     np.savetxt('results{}.txt'.format(pulsar_arg_names[arg]), res, delimiter=',')
 
- def pulsar_worker_all(exp, N):
-     n = 1
-     res = []
+def pulsar_worker_all(exp, N):
+  n = 1
+  res = []
 
-     while n<=N:
-         pulsar_number=str(n)
+  while n<=N:
+    pulsar_number=str(n)
 
-         for arg in [x for x in range(1, 13) if (x != 4 and x != 11)]:
-             b1 = np.random.uniform(pulsar_arg_ranges[arg - 1][0], pulsar_arg_ranges[arg - 1][1])
-             pulsar[arg] = '{0:.2f}'.format(float(str(b1)))
+    for arg in [x for x in range(1, 13) if (x != 4 and x != 11)]:
+      b1 = np.random.uniform(pulsar_arg_ranges[arg - 1][0], pulsar_arg_ranges[arg - 1][1])
+      pulsar[arg] = '{0:.2f}'.format(float(str(b1)))
 
-         pulsar[13] = "SimPulse{}N{}.gg".format(str(pulsar_number),str(N))
-         subprocess.run(pulsar)
+      pulsar[13] = "SimPulse{}N{}.gg".format(str(pulsar_number),str(N))
+      subprocess.run(pulsar)
 
-         try:
-             x = compare_pulsars_all(pulsar_number, N, exp)
-             result = []
-             for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
-                 result.append(pulsar[i])
-             result.append(x)
-             res.append(result)
+      try:
+        x = compare_pulsars_all(pulsar_number, N, exp)
+        result = []
+        for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
+           result.append(pulsar[i])
+           result.append(x)
+           res.append(result)
 
-         except Exception:
-             print("Skipping")
-             continue
-         finally:
-             print("cleaning up")
-             try:
-                 os.remove("SimPulse{}N{}.gg".format(str(pulsar_number),str(N)))
-                 os.remove("SimPulse{}N{}.gg.ASCII".format(str(pulsar_number),str(N)))
-             except FileNotFoundError as e:
-                 print("Pulsar number {} in N={} all variable run skipped.".format(str(pulsar_number), str(N)))
-             n += 1
-     print("writing Results to file")
-     np.savetxt('AllVarResults/results{}.txt'.format(N), res, delimiter=',')
+      except Exception:
+        print("Skipping")
+        continue
+
+      finally:
+        print("cleaning up")
+        try:
+          os.remove("SimPulse{}N{}.gg".format(str(pulsar_number),str(N)))
+          os.remove("SimPulse{}N{}.gg.ASCII".format(str(pulsar_number),str(N)))
+        except FileNotFoundError as e:
+          print("Pulsar number {} in N={} all variable run skipped.".format(str(pulsar_number), str(N)))
+
+    n += 1
+  print("writing Results to file")
+  np.savetxt('AllVarResults/results{}.txt'.format(N), res, delimiter=',')
 
 
 df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")  # experimental p3fold here
