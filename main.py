@@ -130,7 +130,8 @@ def pulsar_worker_all(exp, N):
         os.remove("SimPulse{}N{}.gg.ASCII".format(str(pulsar_number),str(N)))
       except FileNotFoundError as e:
         print("Pulsar number {} in N={} all variable run skipped.".format(str(pulsar_number), str(N)))
-     n += 1
+
+      n += 1
   print("writing Results to file")
   np.savetxt('AllVarResults/results{}.txt'.format(N), res, delimiter=',')
 
