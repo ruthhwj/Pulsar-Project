@@ -135,7 +135,7 @@ def pulsar_worker_all(exp, N):
 
 
   print("writing Results to file")
-  np.savetxt('AllVarResults/results{}.txt'.format(N), res, delimiter=',')
+  np.savetxt('AllVarResults_N{}.txt'.format(N), res, delimiter=',')
 
 
 df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")  # experimental p3fold here
