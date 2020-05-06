@@ -4,11 +4,11 @@ import subprocess
 import glob, os
 from astropy.io import ascii
 import numpy as np
-#REBINNED WEAK_ALL37 REBINNED RUTH FILE
+
 pulsar=["./pulsar-getter.sh", "233.940149", "10.5", "1", "15" , "17", "0.85", "45", "0.5", "7.7", "1", "15", "4", "refpulsar.gg"]
 pulsar_arg_names = ["scriptname", "Cone1Intensity", "Cone1BeamAngle", "Cone1BeamletAngle","Cone1NumberOfSparks", "Cone1phi0", "Eccentricity", "Orientation", "Cone2Intensity",
                     "Cone2BeamAngle", "Cone2BeamletAngle","Cone2NumberOfSparks", "Cone2phi0", "Filename"]
-pulsar_arg_ranges = [[230, 250], [9, 12], [1, 2], [10, 15], [14,20] , [0, 0.99], [40, 55], [0.2, 1], [7.5,8.1], [0.5,2], [5,15], [1 ,7]] #ranges over which to search for each variable
+pulsar_arg_ranges = [[230, 300], [9, 12], [1, 2], [15, 15], [14,20] , [0.5, 0.9], [40, 50], [40, 120], [4,8], [0.5,1.5], [15,15], [26,32]] #ranges over which to search for each variable
 
 
 def read_pulsar(string): # Reads ASCII, returns dataframe  #"weak.all37.p3fold.ASCII"
@@ -118,6 +118,7 @@ def pulsar_worker_all(exp, N):
         result.append(pulsar[i])
         result.append(chi)
         res.append(result)
+        n += 1
 
     except Exception:
       print("Skipping")
@@ -131,7 +132,7 @@ def pulsar_worker_all(exp, N):
       except FileNotFoundError as e:
         print("Pulsar number {} in N={} all variable run skipped.".format(str(pulsar_number), str(N)))
 
-      n += 1
+
   print("writing Results to file")
   np.savetxt('AllVarResults/results{}.txt'.format(N), res, delimiter=',')
 
