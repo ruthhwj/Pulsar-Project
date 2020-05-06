@@ -11,7 +11,7 @@ pulsar_arg_names = ["scriptname", "Cone1Intensity", "Cone1BeamAngle", "Cone1Beam
 pulsar_arg_ranges = [[230, 250], [9, 12], [1, 2], [10, 15], [14,20] , [0, 0.99], [40, 55], [0.2, 1], [7.5,8.1], [0.5,2], [5,15], [1 ,7]] #ranges over which to search for each variable
 
 
-def read_pulsar(string): # Reads ASCII, returns dataframe  #"weak.all37.p3fold.ASCII" "W5testmodel.p3fold.ASCII"
+def read_pulsar(string): # Reads ASCII, returns dataframe  #"weak.all37.p3fold.ASCII"
   data = ascii.read(string, data_start=1)
   df = data.to_pandas()
   return df
