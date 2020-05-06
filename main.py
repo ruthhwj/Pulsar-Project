@@ -108,28 +108,28 @@ def pulsar_worker_all(exp, N):
       b1 = np.random.uniform(pulsar_arg_ranges[arg - 1][0], pulsar_arg_ranges[arg - 1][1])
       pulsar[arg] = '{0:.2f}'.format(float(str(b1)))
 
-      pulsar[13] = "SimPulse{}N{}.gg".format(str(pulsar_number),str(N))
-      subprocess.run(pulsar)
+    pulsar[13] = "SimPulse{}N{}.gg".format(str(pulsar_number),str(N))
+    subprocess.run(pulsar)
 
+    try:
+      x = compare_pulsars_all(pulsar_number, N, exp)
+      result = []
+      for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
+        result.append(pulsar[i])
+        result.append(x)
+        res.append(result)
+
+    except Exception:
+      print("Skipping")
+      continue
+
+    finally:
+      print("cleaning up")
       try:
-        x = compare_pulsars_all(pulsar_number, N, exp)
-        result = []
-        for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
-           result.append(pulsar[i])
-           result.append(x)
-           res.append(result)
-
-      except Exception:
-        print("Skipping")
-        continue
-
-      finally:
-        print("cleaning up")
-        try:
-          os.remove("SimPulse{}N{}.gg".format(str(pulsar_number),str(N)))
-          os.remove("SimPulse{}N{}.gg.ASCII".format(str(pulsar_number),str(N)))
-        except FileNotFoundError as e:
-          print("Pulsar number {} in N={} all variable run skipped.".format(str(pulsar_number), str(N)))
+        os.remove("SimPulse{}N{}.gg".format(str(pulsar_number),str(N)))
+        os.remove("SimPulse{}N{}.gg.ASCII".format(str(pulsar_number),str(N)))
+      except FileNotFoundError as e:
+        print("Pulsar number {} in N={} all variable run skipped.".format(str(pulsar_number), str(N)))
 
     n += 1
   print("writing Results to file")
@@ -154,7 +154,7 @@ def main():
 
     N = [100,500,1000,5000]
     for i in N:
-     job = pool.apply_async(pulsar_worker_all, (i, intensities_exp))
+     job = pool.apply_async(pulsar_worker_all, (intensities_exp,i))
 
     # collect results from the workers through the pool result queue
 
