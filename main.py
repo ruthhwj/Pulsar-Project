@@ -118,6 +118,7 @@ def pulsar_worker_1d(arg, exp): # int argument,
                  result.append(pulsar[i])
              result.append(x)
              res.append(result)
+
          except Exception:
              print("Skipping")
              continue
@@ -149,8 +150,9 @@ def main():
 #    for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
 #        job = pool.apply_async(pulsar_worker_1d, (i, intensities_exp))
 
-    N=1000
-    job = pool.apply_async(pulsar_worker_all, (N, intensities_exp))
+    N = [100,500,1000,5000]
+    for i in N:
+     job = pool.apply_async(pulsar_worker_all, (i, intensities_exp))
 
     # collect results from the workers through the pool result queue
 
