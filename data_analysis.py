@@ -42,11 +42,21 @@ def get_intensities(df, flag):  # Reads dataframe, returns 50x2246 array for plo
 def plot_pulsar(df_pixelarray):
  print("Plotting pulsar...")
  plt.imshow(df_pixelarray, 'afmhot', origin='lower', interpolation='none', aspect='auto',extent=[700,1000,0,50])
- plt.colorbar()
+ plt.xlabel("Pulse bin")
+ plt.ylabel('Pulse Subint')
+ #plt.colorbar()
  plt.show()
 
 def gaussian(x, mu, sig):
   return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
+
+def fit_measure(intensities_ref, intensities_img):
+    chi = 0
+    for i in range(len(intensities_ref)):
+        x1 = (intensities_img[i] - intensities_ref[i])
+        chi += abs(x1 * x1)/ (RMS_noise * (50 * 300 - 2))
+    return chi   #
+
 
 def brighten(exp_data):
   i = 0
@@ -70,11 +80,22 @@ pd.set_option('display.width', 1000)
       #main code#
 
 #data preprocessing
+df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")  # experimental p3fold here
+intensities_exp = brighten(get_intensities(df_exp, 0)).flatten()
+intensities_RMS = np.array(df_exp.col4)
+exp_croppedlist = ((intensities_RMS.reshape(50, 1123))[:, 0:600]).flatten()  # off pulse RMS noise
+RMS_noise = np.var(exp_croppedlist)
+RMS = np.sqrt(np.mean(exp_croppedlist*exp_croppedlist))
+print(RMS)
+print(RMS_noise)
 
-#df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")  # experimental p3fold here
-#intensities_exp = brighten(get_intensities(df_exp, 0)).flatten()
+df_ref = read_pulsar("realreferencepulsar.ASCII")
+intensities_ref = get_intensities(df_exp,1)
+fitmeasure = fit_measure(intensities_ref, intensities_exp)
+print(fitmeasure)
 
-#
+plot_pulsar(get_intensities(df_ref,0))
+plot_pulsar(brighten(get_intensities(df_exp, 0)))
 """
 # N=1000
 
@@ -111,27 +132,26 @@ for i in [x for x in range(1,13) if (x!=4 and x!=11 and x!=1 and x!=8)]:
   plt.scatter(data1d.col1, data1d.chi, linewidth=1)
   plt.xlabel(pulsar_arg_names[i])
   plt.ylabel('Reduced Chi Squared')
-  plt.title("N=10000")
+  plt.title("N="+str(N))
   plt.show()
 
 
-# N=50000
+  for i in [x for x in range(1,13) if (x!=4 and x!=11 and x!=1 and x!=8)]:
+    data1d = pd.read_csv(r'Results\500 1D\results{}.txt'.format(pulsar_arg_names[i]), sep=",", header=None)
+    data1d.columns = ["col1", "chi"]
+    print(data1d.nsmallest(5, 'chi'))
+    plt.scatter(data1d.col1, data1d.chi, linewidth=1)
+    plt.xlabel(pulsar_arg_names[i])
+    plt.ylabel('Reduced Chi Squared')
+    plt.title("N="+str(N))
+    plt.show()
 
-for i in [x for x in range(1,13) if (x!=4 and x!=11 and x!=1 and x!=8)]:
-  data1d = pd.read_csv(r'Results\500 1D\results{}.txt'.format(pulsar_arg_names[i]), sep=",", header=None)
-  data1d.columns = ["col1", "chi"]
-  print(data1d.nsmallest(5, 'chi'))
-  plt.scatter(data1d.col1, data1d.chi, linewidth=1)
-  plt.xlabel(pulsar_arg_names[i])
-  plt.ylabel('Reduced Chi Squared')
-  plt.title("N=50000")
-  plt.show()
-
-
+"""
 """
 # ND
 
-N=1000
+N=1000  #change this depending on which dataset you want to look at
+
 col = []
 dataND = pd.read_csv('AllResults_N{}.csv'.format(N), sep=",", header=None) #has 11 columns
 
@@ -149,6 +169,6 @@ for column in dataND:
   plt.xlabel(column)
   plt.ylabel('Reduced Chi Squared')
   plt.title("N="+str(N))
+  plt.savefig('NDResults\AllResults_N{}_{}.png'.format(N, column))
   plt.show()
-  plt.savefig(r'NDResults\AllResults_N{}_{}.png'.format(N, column))
-
+"""
