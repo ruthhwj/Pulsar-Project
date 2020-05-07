@@ -1,15 +1,6 @@
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import subprocess
-import string
 from astropy.io import ascii
-import glob, os
-import sklearn
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.cm as cmx
-import scipy as sp
-from mpl_toolkits import mplot3d
 import numpy as np
 
 
@@ -84,7 +75,7 @@ pd.set_option('display.width', 1000)
 #intensities_exp = brighten(get_intensities(df_exp, 0)).flatten()
 
 #
-
+"""
 # N=1000
 
 for i in [x for x in range(1,13) if (x!=4 and x!=11 and x!=1 and x!=8)]:
@@ -137,8 +128,27 @@ for i in [x for x in range(1,13) if (x!=4 and x!=11 and x!=1 and x!=8)]:
   plt.show()
 
 
+"""
+# ND
 
+N=1000
+col = []
+dataND = pd.read_csv('AllResults_N{}.csv'.format(N), sep=",", header=None) #has 11 columns
 
+for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
+  col.append(pulsar_arg_names[i])
 
+col.append("chi")
+print(col)
+dataND.columns = col
+print(dataND.nsmallest(20, 'chi'))
 
+for column in dataND:
+  contents = dataND[column]
+  plt.scatter(contents, dataND.chi, linewidth=1)
+  plt.xlabel(column)
+  plt.ylabel('Reduced Chi Squared')
+  plt.title("N="+str(N))
+  plt.show()
+  plt.savefig(r'NDResults\AllResults_N{}_{}.png'.format(N, column))
 
