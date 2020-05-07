@@ -54,8 +54,8 @@ def brighten(exp_data):
     return exp_data
 
 
-def compare_pulsars_1d(pulsar_number, pulsar_variable, intensities_exp):
-    df_sim = read_pulsar("SimPulse{}{}.gg.ASCII".format(pulsar_variable, pulsar_number))
+def compare_pulsars_1d(pulsar_number, pulsar_variable, intensities_exp, N):
+    df_sim = read_pulsar("SimPulse{}{}N{}.gg.ASCII".format(pulsar_variable, pulsar_number, str(N)))
     intensities_sim = get_intensities(df_sim, 1)
     chi = fit_measure(intensities_exp, intensities_sim)
     print("returning chi")
@@ -70,17 +70,17 @@ def compare_pulsars_all(pulsar_number, N, intensities_exp_flat):
     return chi
 
 
-def pulsar_worker_1d(arg, exp): # int argument,
+def pulsar_worker_1d(arg, exp, N): # int argument,
     n = 1
     res = []
-    while n<=10:
+    while n<=N:
         pulsar_number=str(n)
         b1=np.random.uniform(pulsar_arg_ranges[arg-1][0], pulsar_arg_ranges[arg-1][1])
-        pulsar[13]="SimPulse{}{}.gg".format(pulsar_arg_names[arg], str(pulsar_number))
+        pulsar[13]="SimPulse{}{}N{}.gg".format(pulsar_arg_names[arg], str(pulsar_number),str(N))
         pulsar[arg]='{0:.2f}'.format(float(str(b1)))
         subprocess.run(pulsar)
         try:
-            x = compare_pulsars_1d(pulsar_number, pulsar_arg_names[arg], exp)
+            x = compare_pulsars_1d(pulsar_number, pulsar_arg_names[arg], exp, N)
             result = [b1, x]
             res.append(result)
         except Exception:
@@ -89,13 +89,13 @@ def pulsar_worker_1d(arg, exp): # int argument,
         finally:
             print("cleaning up")
             try:
-                os.remove("SimPulse{}{}.gg".format(pulsar_arg_names[arg], str(pulsar_number)))
-                os.remove("SimPulse{}{}.gg.ASCII".format(pulsar_arg_names[arg], str(pulsar_number)))
+                os.remove("SimPulse{}{}N{}.gg".format(pulsar_arg_names[arg], str(pulsar_number),str(N)))
+                os.remove("SimPulse{}{}N{}.gg.ASCII".format(pulsar_arg_names[arg], str(pulsar_number),str(N)))
             except FileNotFoundError as e:
                 print("Value for {} at number {} skipped.".format(pulsar_arg_names[arg], str(pulsar_number)))
             n+=1
-    print("writing Results{} to file".format(pulsar_arg_names[arg]))
-    np.savetxt('results{}.txt'.format(pulsar_arg_names[arg]), res, delimiter=',')
+    print("writing N= {} Results{} to file".format(str(N), pulsar_arg_names[arg]))
+    np.savetxt('results{}N{}.txt'.format(pulsar_arg_names[arg], str(N)), res, delimiter=',')
 
 def pulsar_worker_all(exp, N):
     n = 1
@@ -148,14 +148,17 @@ def main():
     pool = mp.Pool(mp.cpu_count() + 2)
     #fire off workers
     start_time=time.time()
+    N = [100,500,1000,5000,10000]
+    # UNCOMMENT FOR 1D
+    # for j in N:
+#       for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
+#           job = pool.apply_async(pulsar_worker_1d, (i, intensities_exp, N))
+    #UNCOMMENT FOR 1D
 
-#    for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
-#        job = pool.apply_async(pulsar_worker_1d, (i, intensities_exp))
-
-    N = [5]
+    #COMMENT FOR 1D
     for i in N:
      job = pool.apply_async(pulsar_worker_all, (intensities_exp,i))
-
+    #COMMENT FOR 1D
     # collect results from the workers through the pool result queue
 
     #now we are done, kill the listener
