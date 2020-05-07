@@ -18,7 +18,20 @@ pulsar_arg_names = ["scriptname", "Cone1Intensity", "Cone1BeamAngle", "Cone1Beam
                     "Cone2BeamAngle", "Cone2BeamletAngle","Cone2NumberOfSparks", "Cone2phi0", "Filename"]
 pulsar_arg_ranges = [[230, 260], [8, 12], [1, 2], [15, 15], [10,20] , [0.5, 0.9], [40, 50], [40, 100], [6,10], [0.5,1.5], [15,15], [22,32]] #ranges over which to search for each variable
 
-
+"""
+1 cone 1 intensity
+2 cone 1 beam angle
+3 cone 1 beamlet angle
+4 cone 1 number of sparks
+5 cone 1 offset
+6 eccentricity
+7 orientation of semi major
+8 cone 2 intensity
+9 cone 2 beam angle
+10 cone 2 beamlet angle
+11 cone 2 number of sparks
+12 cone 2 offset
+"""
 
 def read_pulsar(string):  # Reads ASCII, returns dataframe  #"weak.all37.p3fold.ASCII"
   data = ascii.read(string, data_start=1)
@@ -70,7 +83,11 @@ pd.set_option('display.width', 1000)
 #df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")  # experimental p3fold here
 #intensities_exp = brighten(get_intensities(df_exp, 0)).flatten()
 
-for i in [x for x in range(1,13) if (x!=4 and x!=11 and x!=1 and x!=7)]:
+#
+
+# N=1000
+
+for i in [x for x in range(1,13) if (x!=4 and x!=11 and x!=1 and x!=8)]:
   data1d = pd.read_csv(r'Results\1k 1D\results{}.txt'.format(pulsar_arg_names[i]), sep=",", header=None)
   data1d.columns = ["col1", "chi"]
   print(data1d.nsmallest(5, 'chi'))
@@ -80,117 +97,48 @@ for i in [x for x in range(1,13) if (x!=4 and x!=11 and x!=1 and x!=7)]:
   plt.title("N=1000")
   plt.show()
 
-#ignore below
-""""
-N=100
+# N=5000
 
-data = pd.read_csv('AllVarResults_N{}.txt'.format(N), sep=",", header=None)
-
-col = []
-
-for i in [x for x in range(1, 13) if (x != 4 and x != 11)]:
-    print(i)
-    col.append(pulsar_arg_names[i])
-
-col.append("chi")
-
-data.columns = col
-
-print(data.nsmallest(20, 'chi')) #print parameters which give the minimum fmeasures
-
-for label in data.items():
-  plt.scatter(data.label, data.chi, linewidth=1)#cool,BrBg, twilight_shifted
-  plt.xlabel(label)
+for i in [x for x in range(1,13) if (x!=4 and x!=11 and x!=1 and x!=8)]:
+  data1d = pd.read_csv(r'Results\5k 1D\results{}.txt'.format(pulsar_arg_names[i]), sep=",", header=None)
+  data1d.columns = ["col1", "chi"]
+  print(data1d.nsmallest(5, 'chi'))
+  plt.scatter(data1d.col1, data1d.chi, linewidth=1)
+  plt.xlabel(pulsar_arg_names[i])
   plt.ylabel('Reduced Chi Squared')
+  plt.title("N=5000")
+  plt.show()
+
+
+
+# N=10000
+
+for i in [x for x in range(1,13) if (x!=4 and x!=11 and x!=1 and x!=8)]:
+  data1d = pd.read_csv(r'Results\10k 1D\results{}.txt'.format(pulsar_arg_names[i]), sep=",", header=None)
+  data1d.columns = ["col1", "chi"]
+  print(data1d.nsmallest(5, 'chi'))
+  plt.scatter(data1d.col1, data1d.chi, linewidth=1)
+  plt.xlabel(pulsar_arg_names[i])
+  plt.ylabel('Reduced Chi Squared')
+  plt.title("N=10000")
+  plt.show()
+
+
+# N=50000
+
+for i in [x for x in range(1,13) if (x!=4 and x!=11 and x!=1 and x!=8)]:
+  data1d = pd.read_csv(r'Results\500 1D\results{}.txt'.format(pulsar_arg_names[i]), sep=",", header=None)
+  data1d.columns = ["col1", "chi"]
+  print(data1d.nsmallest(5, 'chi'))
+  plt.scatter(data1d.col1, data1d.chi, linewidth=1)
+  plt.xlabel(pulsar_arg_names[i])
+  plt.ylabel('Reduced Chi Squared')
+  plt.title("N=50000")
   plt.show()
 
 
 
 
 
-        #######scatter plots of the 2D Monte Carlo results
-
-#data = pd.read_csv('results_p1p2.txt', sep=",", header=None)
-
-#08/04/20 results_p1p2 is the N=50 monte carlo simulation
-# p1 and p2 were randomly generated between 0.1 and 0.8
-
-data = pd.read_csv('results_p1p2N500.txt', sep=",", header=None)
-
-#08/04/20 results_p1p2 is the N=500 monte carlo simulation
-# p1 and p2 were randomly generated between 0 and 1
-
-data = pd.read_csv('results_b1b2.txt', sep=",", header=None)
-
-#09/04/20 results_b1b2 is the N=500 monte carlo simulation
-# b1 and b2 were randomly generated between 5 and 15 (half opening angle of the beam)
-
-data.columns = ["p1", "p2", "fmeasure"] #cone 1 intensity, cone 2 intensity, fit measure
-#rdata = data[data['chi'] > 10] # can crop out crazy outliers that make the plots a bit hard to interpret
 
 
-
-
-#PLOT 2: present as 2d with colourmap as fitmeasure
-plt.scatter(data2d.b1, data2d.b2, c=data2d.fmeasure, cmap='BrBG', linewidth=1)#cool,BrBg, twilight_shifted
-plt.xlabel('Cone 1 Half Opening Beam Angle')
-plt.ylabel('Cone 2 Half Opening Beam Angle')
-cbar = plt.colorbar()
-cbar.set_label('Reduced Chi Squared')
-plt.show()
-"""
-      #Histograms of the pixel intensity ranges
-
-
-
-
-#plot_pulsar(pulsar)
-
-#data = pulsar.flatten()
-
-"""
-exp = get_intensities(df_exp, 1)
-model = get_intensities(df_model, 1)
-
-print("max intensity of model is " + str(max(model)))
-print("min intensity of model is " + str(min(model)))
-print("max intensity of exp is " + str(max(exp)))
-print("min intensity of exp is " + str(min(exp)))
-
-
-A = [(exp),(model)]
-
-plt.boxplot(A, labels=["Experimental Intensities", "Model Intensities"], sym="")
-plt.show()
-
-#without outliers
-#plt.boxplot(df_exp.col4)
-
-
-df = pd.DataFrame([exp, model], columns=["Experimental Intensities", "Model Intensities"])
-boxplot = df.boxplot(column=["Experimental Intensities", "Model Intensities"], sym="")
-print("here")
-boxplot.show()
-
-
-## difference images ###
-
-p1_0 = read_pulsar("a1a2_3_pulsar.ASCII")
-p2_0 = read_pulsar("b1b2_pulsar.ASCII")
-
-p1 = get_intensities(p1_0,0)
-p2 = get_intensities(p2_0,0)
-exp = get_intensities(df_exp,0)
-
-dif_1 = abs(exp - p1)
-dif_2 = abs(exp - p2)
-
-
-plt.imshow(dif_1, cmap='afmhot', aspect='auto', extent=[1400,2000,0,50])
-plt.colorbar()
-plt.show()
-
-plt.imshow(dif_2, cmap='afmhot', aspect='auto', extent=[1400,2000,0,50])
-plt.colorbar()
-plt.show()
-"""
