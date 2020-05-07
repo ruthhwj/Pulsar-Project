@@ -5,7 +5,7 @@ import glob, os
 from astropy.io import ascii
 import numpy as np
 import csv
-
+#should be working
 pulsar=["./pulsar-getter.sh", "233.940149", "10.5", "1", "15" , "17", "0.85", "45", "60", "7.7", "1", "15", "29", "refpulsar.gg"]
 pulsar_arg_names = ["scriptname", "Cone1Intensity", "Cone1BeamAngle", "Cone1BeamletAngle","Cone1NumberOfSparks", "Cone1phi0", "Eccentricity", "Orientation", "Cone2Intensity",
                     "Cone2BeamAngle", "Cone2BeamletAngle","Cone2NumberOfSparks", "Cone2phi0", "Filename"]
