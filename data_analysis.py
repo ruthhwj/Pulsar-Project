@@ -13,14 +13,14 @@ from mpl_toolkits import mplot3d
 import numpy as np
 
 
-pulsar=["./pulsar-getter.sh", "233.940149", "10.5", "1", "15" , "17", "0.85", "45", "0.5", "7.7", "1", "15", "4", "refpulsar.gg"]
+pulsar=["./pulsar-getter.sh", "233.940149", "10.5", "1", "15" , "17", "0.85", "45", "60", "7.7", "1", "15", "29", "refpulsar.gg"]
 pulsar_arg_names = ["scriptname", "Cone1Intensity", "Cone1BeamAngle", "Cone1BeamletAngle","Cone1NumberOfSparks", "Cone1phi0", "Eccentricity", "Orientation", "Cone2Intensity",
                     "Cone2BeamAngle", "Cone2BeamletAngle","Cone2NumberOfSparks", "Cone2phi0", "Filename"]
-pulsar_arg_ranges = [[230, 300], [9, 12], [1, 2], [15, 15], [14,20] , [0.5, 0.9], [40, 50], [40, 120], [4,8], [0.5,1.5], [15,15], [26,32]] #ranges over which to search for each variable
+pulsar_arg_ranges = [[230, 260], [8, 12], [1, 2], [15, 15], [10,20] , [0.5, 0.9], [40, 50], [40, 100], [6,10], [0.5,1.5], [15,15], [22,32]] #ranges over which to search for each variable
 
 
 
-def read_pulsar(string):  # Reads ASCII, returns dataframe  #"weak.all37.p3fold.ASCII" "W5testmodel.p3fold.ASCII"
+def read_pulsar(string):  # Reads ASCII, returns dataframe  #"weak.all37.p3fold.ASCII"
   data = ascii.read(string, data_start=1)
   df = data.to_pandas()
   return df
@@ -70,7 +70,18 @@ pd.set_option('display.width', 1000)
 #df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")  # experimental p3fold here
 #intensities_exp = brighten(get_intensities(df_exp, 0)).flatten()
 
+for i in [x for x in range(1,13) if (x!=4 and x!=11 and x!=1 and x!=7)]:
+  data1d = pd.read_csv(r'Results\1k 1D\results{}.txt'.format(pulsar_arg_names[i]), sep=",", header=None)
+  data1d.columns = ["col1", "chi"]
+  print(data1d.nsmallest(5, 'chi'))
+  plt.scatter(data1d.col1, data1d.chi, linewidth=1)
+  plt.xlabel(pulsar_arg_names[i])
+  plt.ylabel('Reduced Chi Squared')
+  plt.title("N=1000")
+  plt.show()
 
+#ignore below
+""""
 N=100
 
 data = pd.read_csv('AllVarResults_N{}.txt'.format(N), sep=",", header=None)
@@ -93,7 +104,7 @@ for label in data.items():
   plt.ylabel('Reduced Chi Squared')
   plt.show()
 
-""""
+
 
 
 
