@@ -4,14 +4,14 @@ import subprocess
 import glob, os
 from astropy.io import ascii
 import numpy as np
-#REBINNED WEAK_ALL37 REBINNED RUTH FILE
-pulsar=["./pulsar-getter.sh", "233.940149", "10.5", "1", "15" , "17", "0.85", "45", "0.5", "7.7", "1", "15", "4", "refpulsar.gg"]
+import csv
+#should be working
+pulsar=["./pulsar-getter.sh", "233.940149", "10.5", "1", "15" , "17", "0.85", "45", "60", "7.7", "1", "15", "29", "refpulsar.gg"]
 pulsar_arg_names = ["scriptname", "Cone1Intensity", "Cone1BeamAngle", "Cone1BeamletAngle","Cone1NumberOfSparks", "Cone1phi0", "Eccentricity", "Orientation", "Cone2Intensity",
                     "Cone2BeamAngle", "Cone2BeamletAngle","Cone2NumberOfSparks", "Cone2phi0", "Filename"]
-pulsar_arg_ranges = [[230, 250], [9, 12], [1, 2], [10, 15], [14,20] , [0, 0.99], [40, 55], [0.2, 1], [7.5,8.1], [0.5,2], [5,15], [1 ,7]] #ranges over which to search for each variable
+pulsar_arg_ranges = [[230, 260], [8, 12], [1, 2], [15, 15], [10,20] , [0.5, 0.9], [40, 50], [40, 100], [6,10], [0.5,1.5], [15,15], [22,32]] #ranges over which to search for each variable
 
-
-def read_pulsar(string): # Reads ASCII, returns dataframe  #"weak.all37.p3fold.ASCII" "W5testmodel.p3fold.ASCII"
+def read_pulsar(string): # Reads ASCII, returns dataframe  #"weak.all37.p3fold.ASCII"
   data = ascii.read(string, data_start=1)
   df = data.to_pandas()
   return df
@@ -63,14 +63,14 @@ def compare_pulsars_1d(pulsar_number, pulsar_variable, intensities_exp):
 
 
 def compare_pulsars_all(pulsar_number, N, intensities_exp_flat):
-    df_sim = read_pulsar("SimPulse{}{}.gg.ASCII".format(N, pulsar_number))
+    df_sim = read_pulsar("SimPulse{}N{}.gg.ASCII".format(str(pulsar_number), str(N)))
     intensities_sim = get_intensities(df_sim, 1)
     chi = fit_measure(intensities_exp_flat, intensities_sim)
     print("returning chi")
     return chi
 
 
-def pulsar_worker_1d(arg, exp):
+def pulsar_worker_1d(arg, exp): # int argument,
     n = 1
     res = []
     while n<=10:
@@ -81,7 +81,7 @@ def pulsar_worker_1d(arg, exp):
         subprocess.run(pulsar)
         try:
             x = compare_pulsars_1d(pulsar_number, pulsar_arg_names[arg], exp)
-            result = [b1,x]
+            result = [b1, x]
             res.append(result)
         except Exception:
             print("Skipping")
@@ -97,45 +97,43 @@ def pulsar_worker_1d(arg, exp):
     print("writing Results{} to file".format(pulsar_arg_names[arg]))
     np.savetxt('results{}.txt'.format(pulsar_arg_names[arg]), res, delimiter=',')
 
-# def pulsar_worker_all(exp, N):
-#     n = 1
-#     res = []
-#     E = [0.7, 0.72, 0.74, 0.76, 0.78, 0.80, 0.82, 0.84, 0.86, 0.88, 0.90]  # avoid weird floating point error
-#     osm = [43, 44, 45, 46, 47]
-#     while n<=N:
-#         pulsar_number=str(n)
-#         pulsar[1] = str(np.random.uniform(230, 250))  # 1
-#         pulsar[2] = str(np.random.uniform(9, 12))  # 2
-#         pulsar[3] = str(np.random.uniform(1, 2))  # 3
-#         pulsar[5] = str(np.random.uniform(14,20))
-#         pulsar[6] = str(round(np.random.choice(E), 2))
-#         pulsar[7] = str(round(np.random.choice(osm), 0))
-#         pulsar[8] = str(np.random.uniform(40, 80))  # 7
-#         pulsar[9] = str(np.random.uniform(4, 8))  # 8
-#         pulsar[10] = str(np.random.uniform(0.5, 1.5))  # 9
-#         pulsar[12] = str(np.random.uniform(1,7))
-#         pulsar[13] = "SimPulse{}N{}.gg".format(str(pulsar_number),str(N))
-#         subprocess.run(pulsar)
-#         try:
-#             x = compare_pulsars_all(pulsar_number, N, exp)
-#             result = []
-#             for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
-#                 result.append(pulsar[i])
-#             result.append(x)
-#             res.append(result)
-#         except Exception:
-#             print("Skipping")
-#             continue
-#         finally:
-#             print("cleaning up")
-#             try:
-#                 os.remove("SimPulse{}N{}.gg".format(str(pulsar_number),str(N)))
-#                 os.remove("SimPulse{}N{}.gg.ASCII".format(str(pulsar_number),str(N)))
-#             except FileNotFoundError as e:
-#                 print("Pulsar number {} in N={} all variable run skipped.".format(str(pulsar_number), str(N)))
-#             n += 1
-#     print("writing Results to file")
-#     np.savetxt('AllVarResults/results{}.txt'.format(N), res, delimiter=',')
+def pulsar_worker_all(exp, N):
+    n = 1
+    res = []
+
+    while n<=N:
+        pulsar_number=str(n)
+
+        for arg in [x for x in range(1, 13) if (x != 4 and x != 11)]:
+            b1 = np.random.uniform(pulsar_arg_ranges[arg - 1][0], pulsar_arg_ranges[arg - 1][1])
+            pulsar[arg] = '{0:.2f}'.format(float(str(b1)))
+
+        pulsar[13] = "SimPulse{}N{}.gg".format(str(pulsar_number),str(N))
+        subprocess.run(pulsar)
+
+        try:
+            chi = compare_pulsars_all(pulsar_number, N, exp)
+            print("Reduced chi squared =" + str(chi))
+            result = []
+            for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
+                result.append(pulsar[i])
+            result.append(chi)
+            res.append(result)
+        except Exception:
+            print("Skipping")
+            continue
+        finally:
+            print("cleaning up")
+            try:
+                os.remove("SimPulse{}N{}.gg".format(str(pulsar_number),str(N)))
+                os.remove("SimPulse{}N{}.gg.ASCII".format(str(pulsar_number),str(N)))
+            except FileNotFoundError as e:
+                print("Pulsar number {} in N={} all variable run skipped.".format(str(pulsar_number), str(N)))
+            n += 1
+    print("writing Results to file")
+    with open("AllResults_N{}.csv".format(N), "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(res)
 
 
 df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")  # experimental p3fold here
@@ -147,12 +145,16 @@ RMS_noise = np.var(exp_croppedlist)
 
 
 def main():
-
     pool = mp.Pool(mp.cpu_count() + 2)
     #fire off workers
     start_time=time.time()
-    for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
-        job = pool.apply_async(pulsar_worker_1d, (i, intensities_exp))
+
+#    for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
+#        job = pool.apply_async(pulsar_worker_1d, (i, intensities_exp))
+
+    N = [5]
+    for i in N:
+     job = pool.apply_async(pulsar_worker_all, (intensities_exp,i))
 
     # collect results from the workers through the pool result queue
 
