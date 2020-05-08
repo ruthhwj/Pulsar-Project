@@ -87,77 +87,43 @@ intensities_exp = brighten(get_intensities(df_exp, 0)).flatten()
 intensities_RMS = np.array(df_exp.col4)
 exp_croppedlist = ((intensities_RMS.reshape(50, 1123))[:, 0:600]).flatten()  # off pulse RMS noise
 RMS_noise = np.var(exp_croppedlist)
-
 print(RMS_noise)
 
-#attempt to get individual chis out for chosen ASCII files
 
+#attempt to get individual chis out for chosen ASCII files
+"""
 df_ref = read_pulsar("realreferencepulsar.ASCII")
 intensities_ref = get_intensities(df_exp,1)
 fitmeasure = fit_measure(intensities_ref, intensities_exp)
 print(fitmeasure)
 
 plot_pulsar(get_intensities(df_ref,0))
-plot_pulsar(brighten(get_intensities(df_exp, 0)))
+
 """
 
-# 1D plots 
-
-
-# N=1000
-
-for i in [x for x in range(1,13) if (x!=4 and x!=11 and x!=1 and x!=8)]:
-  data1d = pd.read_csv(r'Results\1k 1D\results{}.txt'.format(pulsar_arg_names[i]), sep=",", header=None)
-  data1d.columns = ["col1", "chi"]
-  print(data1d.nsmallest(5, 'chi'))
-  plt.scatter(data1d.col1, data1d.chi, linewidth=1)
-  plt.xlabel(pulsar_arg_names[i])
-  plt.ylabel('Reduced Chi Squared')
-  plt.title("N=1000")
-  plt.show()
-
-# N=5000
-
-for i in [x for x in range(1,13) if (x!=4 and x!=11 and x!=1 and x!=8)]:
-  data1d = pd.read_csv(r'Results\5k 1D\results{}.txt'.format(pulsar_arg_names[i]), sep=",", header=None)
-  data1d.columns = ["col1", "chi"]
-  print(data1d.nsmallest(5, 'chi'))
-  plt.scatter(data1d.col1, data1d.chi, linewidth=1)
-  plt.xlabel(pulsar_arg_names[i])
-  plt.ylabel('Reduced Chi Squared')
-  plt.title("N=5000")
-  plt.show()
 
 
 
-# N=10000
+# 1D plots
+N=[500,1000,5000,10000]
 
-for i in [x for x in range(1,13) if (x!=4 and x!=11 and x!=1 and x!=8)]:
-  data1d = pd.read_csv(r'Results\10k 1D\results{}.txt'.format(pulsar_arg_names[i]), sep=",", header=None)
-  data1d.columns = ["col1", "chi"]
-  print(data1d.nsmallest(5, 'chi'))
-  plt.scatter(data1d.col1, data1d.chi, linewidth=1)
-  plt.xlabel(pulsar_arg_names[i])
-  plt.ylabel('Reduced Chi Squared')
-  plt.title("N="+str(N))
-  plt.show()
-
-
-  for i in [x for x in range(1,13) if (x!=4 and x!=11 and x!=1 and x!=8)]:
-    data1d = pd.read_csv(r'Results\500 1D\results{}.txt'.format(pulsar_arg_names[i]), sep=",", header=None)
+for j in N:
+  for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
+    data1d = pd.read_csv(r'Results\{} 1D\results{}.txt'.format(j,pulsar_arg_names[i]), sep=",", header=None)
     data1d.columns = ["col1", "chi"]
     print(data1d.nsmallest(5, 'chi'))
     plt.scatter(data1d.col1, data1d.chi, linewidth=1)
     plt.xlabel(pulsar_arg_names[i])
     plt.ylabel('Reduced Chi Squared')
-    plt.title("N="+str(N))
+    plt.title("N="+str(j))
+    plt.savefig('1D_graphs\AllResults_N{}_{}.png'.format(j, pulsar_arg_names[i]))
     plt.show()
 
 """
-"""
+
 # ND plots
 
-N=1000  #change this depending on which dataset you want to look at
+N = 10000  #change this depending on which dataset you want to look at
 
 col = []
 dataND = pd.read_csv('AllResults_N{}.csv'.format(N), sep=",", header=None) #has 11 columns
@@ -168,7 +134,7 @@ for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
 col.append("chi")
 print(col)
 dataND.columns = col
-print(dataND.nsmallest(20, 'chi'))
+print(dataND.nsmallest(20, 'chi')) # outputs args of the 20 minimum chi pulsars
 
 for column in dataND:
   contents = dataND[column]
@@ -178,4 +144,29 @@ for column in dataND:
   plt.title("N="+str(N))
   plt.savefig('NDResults\AllResults_N{}_{}.png'.format(N, column))
   plt.show()
+
+
+
+
+
+# Plot minimum points of a data set against simulation number
+
+array = np.array(dataND.chi)
+min_chi_results = []
+
+min_chi =10000
+for j in range(len(array)):
+  if array[j] < min_chi:
+    min_chi = array[j]
+    min_chi_results.append([int(j), min_chi])
+
+min_chi_results = np.array(min_chi_results)
+
+plt.scatter(min_chi_results[:,0],min_chi_results[:,1], linewidth=1)
+
+plt.xlabel("Simulation number")
+plt.ylabel("New minimum reduced Chi squared")
+plt.show()
+
 """
+
