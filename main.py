@@ -60,7 +60,7 @@ def compare_pulsars_1d(pulsar_number, pulsar_variable, intensities_exp):
     print("returning chi")
     return chi
 
-
+# a
 def compare_pulsars_all(pulsar_number, N, intensities_exp_flat):
     df_sim = read_pulsar("SimPulse{}N{}.gg.ASCII".format(str(pulsar_number), str(N)))
     intensities_sim = get_intensities(df_sim, 1)
