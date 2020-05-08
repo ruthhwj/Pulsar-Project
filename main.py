@@ -152,7 +152,7 @@ def main():
 #    for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
 #        job = pool.apply_async(pulsar_worker_1d, (i, intensities_exp))
 
-    N = [5]
+    N = [10,50,100,5000]
     for i in N:
      job = pool.apply_async(pulsar_worker_all, (intensities_exp,i))
 

@@ -80,14 +80,17 @@ pd.set_option('display.width', 1000)
       #main code#
 
 #data preprocessing
+
+
 df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")  # experimental p3fold here
 intensities_exp = brighten(get_intensities(df_exp, 0)).flatten()
 intensities_RMS = np.array(df_exp.col4)
 exp_croppedlist = ((intensities_RMS.reshape(50, 1123))[:, 0:600]).flatten()  # off pulse RMS noise
 RMS_noise = np.var(exp_croppedlist)
-RMS = np.sqrt(np.mean(exp_croppedlist*exp_croppedlist))
-print(RMS)
+
 print(RMS_noise)
+
+#attempt to get individual chis out for chosen ASCII files
 
 df_ref = read_pulsar("realreferencepulsar.ASCII")
 intensities_ref = get_intensities(df_exp,1)
@@ -97,6 +100,10 @@ print(fitmeasure)
 plot_pulsar(get_intensities(df_ref,0))
 plot_pulsar(brighten(get_intensities(df_exp, 0)))
 """
+
+# 1D plots 
+
+
 # N=1000
 
 for i in [x for x in range(1,13) if (x!=4 and x!=11 and x!=1 and x!=8)]:
@@ -148,7 +155,7 @@ for i in [x for x in range(1,13) if (x!=4 and x!=11 and x!=1 and x!=8)]:
 
 """
 """
-# ND
+# ND plots
 
 N=1000  #change this depending on which dataset you want to look at
 
