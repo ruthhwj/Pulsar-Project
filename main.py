@@ -9,7 +9,11 @@ import csv
 pulsar=["./pulsar-getter.sh", "250", "10.5", "1", "15" , "17", "0.8", "45", "80", "7.7", "0.85", "15", "29", "refpulsar.gg"]
 pulsar_arg_names = ["scriptname", "Cone1Intensity", "Cone1BeamAngle", "Cone1BeamletAngle","Cone1NumberOfSparks", "Cone1phi0", "Eccentricity", "Orientation", "Cone2Intensity",
                     "Cone2BeamAngle", "Cone2BeamletAngle","Cone2NumberOfSparks", "Cone2phi0", "Filename"]
-pulsar_arg_ranges = [[230, 260], [8, 12], [1, 2], [15, 15], [10,20] , [0.5, 0.9], [40, 50], [60, 120], [6,10], [0.5,1.5], [15,15], [22,32]] #ranges over which to search for each variable
+
+
+#pulsar_arg_ranges = [[230, 260], [8, 12], [1, 2], [15, 15], [10,20] , [0.5, 0.9], [40, 50], [60, 120], [6,10], [0.5,1.5], [15,15], [22,32]] #initial guess of ranges
+pulsar_arg_ranges = [[150, 260], [8, 14], [0.1, 4], [15, 15], [10,20] , [0.5, 0.9], [40, 50], [40, 120], [6,10], [0.5,2], [15,15], [0,50]] # adjusted ranges after looking at 1D graphs
+
 def read_pulsar(string): # Reads ASCII, returns dataframe  #"weak.all37.p3fold.ASCII"
   data = ascii.read(string, data_start=1)
   df = data.to_pandas()
@@ -148,10 +152,10 @@ def main():
     pool = mp.Pool(mp.cpu_count() + 2)
     #fire off workers
     start_time=time.time()
-    # N = [100,500,1000,5000,10000]
+    #N = [100,500,1000,5000,10000]
     # UNCOMMENT FOR 1D
     for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
-        pool.apply_async(pulsar_worker_1d, (i, intensities_exp))
+      pool.apply_async(pulsar_worker_1d, (i, intensities_exp))
     #UNCOMMENT FOR 1D
 
     #COMMENT FOR 1D
