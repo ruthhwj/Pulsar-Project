@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from astropy.io import ascii
 import numpy as np
 
-
 pulsar=["./pulsar-getter.sh", "233.940149", "10.5", "1", "15" , "17", "0.85", "45", "60", "7.7", "1", "15", "29", "refpulsar.gg"]
 pulsar_arg_names = ["scriptname", "Cone1Intensity", "Cone1BeamAngle", "Cone1BeamletAngle","Cone1NumberOfSparks", "Cone1phi0", "Eccentricity", "Orientation", "Cone2Intensity",
                     "Cone2BeamAngle", "Cone2BeamletAngle","Cone2NumberOfSparks", "Cone2phi0", "Filename"]
@@ -23,6 +22,7 @@ pulsar_arg_ranges = [[230, 260], [8, 12], [1, 2], [15, 15], [10,20] , [0.5, 0.9]
 11 cone 2 number of sparks
 12 cone 2 offset
 """
+
 
 def read_pulsar(string):  # Reads ASCII, returns dataframe  #"weak.all37.p3fold.ASCII"
   data = ascii.read(string, data_start=1)
@@ -82,6 +82,7 @@ pd.set_option('display.width', 1000)
 #data preprocessing
 
 
+
 df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")  # experimental p3fold here
 intensities_exp = brighten(get_intensities(df_exp, 0)).flatten()
 intensities_RMS = np.array(df_exp.col4)
@@ -91,6 +92,7 @@ print(RMS_noise)
 
 
 #attempt to get individual chis out for chosen ASCII files
+
 """
 df_ref = read_pulsar("realreferencepulsar.ASCII")
 intensities_ref = get_intensities(df_exp,1)
