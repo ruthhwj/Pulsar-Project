@@ -105,11 +105,11 @@ plot_pulsar(get_intensities(df_ref,0))
 
 
 # 1D plots
-N=[500,1000,5000,10000]
+N=[100,500,1000]
 
 for j in N:
   for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
-    data1d = pd.read_csv(r'Results\{} 1D\results{}.txt'.format(j,pulsar_arg_names[i]), sep=",", header=None)
+    data1d = pd.read_csv(r'Results\N = {} 1D\results{}.txt'.format(j,pulsar_arg_names[i]), sep=",", header=None)
     data1d.columns = ["col1", "chi"]
     print(data1d.nsmallest(5, 'chi'))
     plt.scatter(data1d.col1, data1d.chi, linewidth=1)
