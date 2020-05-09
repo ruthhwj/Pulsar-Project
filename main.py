@@ -71,13 +71,15 @@ def compare_pulsars_all(pulsar_number, N, intensities_exp_flat):
 
 def pulsar_worker_1d(arg, exp): # int argument,
     n = 1
-    N=500
+    N=10
     res = []
     while n<=N:
         pulsar_number=str(n)
         b1=np.random.uniform(pulsar_arg_ranges[arg-1][0], pulsar_arg_ranges[arg-1][1])
         pulsar[13]="SimPulse{}{}.gg".format(pulsar_arg_names[arg], str(pulsar_number))
         pulsar[arg]='{0:.2f}'.format(float(str(b1)))
+        for i in pulsar:
+            print(i)
         subprocess.run(pulsar)
         try:
             x = compare_pulsars_1d(pulsar_number, pulsar_arg_names[arg], exp)
@@ -135,7 +137,6 @@ def pulsar_worker_all(exp, N):
         writer = csv.writer(f)
         writer.writerows(res)
 
-
 df_exp = read_pulsar("weak.all37.p3fold.rebinned.ASCII")  # experimental p3fold here
 intensities_exp = brighten(get_intensities(df_exp, 0)).flatten()
 intensities_RMS = np.array(df_exp.col4)
@@ -146,12 +147,17 @@ RMS_noise = np.var(exp_croppedlist)
 
 def main():
     pool = mp.Pool(mp.cpu_count() + 2)
+    subprocess.check_output(pulsar)
+    df_sim = read_pulsar("refpulsar.gg.ASCII")
+    intensities_sim = get_intensities(df_sim, 1)
+    chi = fit_measure(intensities_exp, intensities_sim)
+    print("ref chi = {} ".format(chi))
     #fire off workers
     start_time=time.time()
     # N = [100,500,1000,5000,10000]
     # UNCOMMENT FOR 1D
-    for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
-        pool.apply_async(pulsar_worker_1d, (i, intensities_exp))
+    # for i in [x for x in range(1,13) if (x!=4 and x!=11)]:
+    #     pool.apply_async(pulsar_worker_1d, (i, intensities_exp))
     #UNCOMMENT FOR 1D
 
     #COMMENT FOR 1D
